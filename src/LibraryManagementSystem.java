@@ -11,4 +11,15 @@ public class LibraryManagementSystem {
     public static void main(String[] args) {
 
     }
+
+    // Book Check
+    public  static  boolean  isCheckBooks(String ISBN){
+        for (int i=0; i<books.length;i++){
+            if(books[i][2] == ISBN){
+                return  true;
+            }
+        }
+        return false;
+    }
 }
+
