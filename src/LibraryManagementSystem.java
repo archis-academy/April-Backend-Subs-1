@@ -9,7 +9,7 @@ public class LibraryManagementSystem {
     private static int transactionQuantity = 0;
 
     public static void main(String[] args) {
-
+    	
     }
     
     /*
@@ -31,12 +31,6 @@ public class LibraryManagementSystem {
 				System.out.println("Page Number: " + books[i][3]);
 			}
 			else if (books[i][2] == string) {
-				System.out.println("Tittle: " + books[i][0]);
-				System.out.println("Author: " + books[i][1]);
-				System.out.println("ISBN: " + books[i][2]);
-				System.out.println("Page Number: " + books[i][3]);
-			}
-			else if (books[i][3] == string) {
 				System.out.println("Tittle: " + books[i][0]);
 				System.out.println("Author: " + books[i][1]);
 				System.out.println("ISBN: " + books[i][2]);
