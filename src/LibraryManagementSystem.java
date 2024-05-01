@@ -26,6 +26,7 @@ public class LibraryManagementSystem {
 				System.out.println("ISBN: " + books[i][2]);
 				System.out.println("Page Number: " + books[i][3]);
 				printed = true;
+				break;
 			}
 			else if (books[i][1].equals(anything)) {
 				System.out.println("Tittle: " + books[i][0]);
@@ -40,6 +41,7 @@ public class LibraryManagementSystem {
 				System.out.println("ISBN: " + books[i][2]);
 				System.out.println("Page Number: " + books[i][3]);
 				printed = true;
+				break;
 			}
 		}
     	
