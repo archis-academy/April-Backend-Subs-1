@@ -9,7 +9,7 @@ public class LibraryManagementSystem {
     private static int transactionQuantity = 0;
 
     public static void main(String[] args) {
-
+    countTotalBooks();
     }
 
     // Book Check
@@ -23,5 +23,10 @@ public class LibraryManagementSystem {
         }
         return response;
     }
-}
 
+   // CountTotalBook
+    public static void countTotalBooks(){
+        int totalBooks=bookQuantity;
+        System.out.println("Total number of the books: " + totalBooks);
+    }
+}
