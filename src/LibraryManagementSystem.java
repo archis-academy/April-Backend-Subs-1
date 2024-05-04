@@ -23,5 +23,30 @@ public class LibraryManagementSystem {
         }
         return response;
     }
+
+    /*
+        *"If a book is unavailable, it is checked whether it exists or not."
+        * "If the book exists, it runs the code to display the existing book."
+    */
+    public static void viewAvailableBooks(){
+        boolean b=true;
+        if(bookQuantity==0){
+            b=false;
+        }
+        if(b==false){
+            System.out.println("Not Available Books");
+        }
+        else{
+            System.out.println("Available books");
+            for(int i=0;i<bookQuantity;i++){
+                System.out.println("Title: " +books[i][0]);
+                System.out.println("Author: " +books[i][1]);
+                System.out.println("ISBN: " +books[i][2]);
+                System.out.println("Page Number: " +books[i][3]);
+            }
+         }
+    }
+
+
 }
 
