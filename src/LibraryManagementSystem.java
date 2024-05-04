@@ -9,7 +9,7 @@ public class LibraryManagementSystem {
     private static int transactionQuantity = 0;
 
     public static void main(String[] args) {
-    countTotalBooks();
+ 
     }
 
     // Book Check
