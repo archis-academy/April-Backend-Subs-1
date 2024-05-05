@@ -45,9 +45,8 @@ public class LibraryManagementSystem {
 			}
 		}
     	
-    	if (printed == false) {
+    	if (printed == false) 
 			System.out.println("No book title, author or ISBN number matching this string value is found.");
-		}
     }
 
     // Book Check
@@ -61,5 +60,10 @@ public class LibraryManagementSystem {
         }
         return response;
     }
-}
 
+   // CountTotalBook
+    public static void countTotalBooks(){
+        int totalBooks=bookQuantity;
+        System.out.println("Total number of the books: " + totalBooks);
+    }
+}
