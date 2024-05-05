@@ -18,7 +18,7 @@ public class LibraryManagementSystem {
      */
     public static int getBookIndexByISBN(String ISBN) {
     	int indexOfExistBook = -1;
-    	for (int i = 0; i < books.length; i++) {
+    	for (int i = 0; i < bookQuantity; i++) {
 			if (ISBN.equals(books[i][2])) {
 				indexOfExistBook = i;
 				break;
