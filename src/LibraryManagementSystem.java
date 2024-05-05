@@ -1,3 +1,5 @@
+import java.time.LocalDate;
+
 public class LibraryManagementSystem {
 
     private static final int INDEX = 100;
@@ -10,6 +12,30 @@ public class LibraryManagementSystem {
 
     public static void main(String[] args) {
 
+    }
+    
+    /*
+     * This method takes the user ID as a parameter and returns the index of the same user in the 'transactions' array.
+     */
+    public static int getTransactionIndexByUserId(String userId) {
+    	int transactionIndex = 0;
+    	for (int i = 0; i < transactionQuantity; i++) {
+			if (transactions[i][0].equals(userId)) {
+				transactionIndex = i;
+				break;
+			}
+		}
+    	return transactionIndex;
+    }
+    
+    /*
+     * This method takes the user ID and the duration for how long the book will stay with the user (in days) as parameters.
+     * It returns the deadline of the book.
+     */
+    public static String checkBookReturnDeadline(String userId, int returnPeriod) {
+    	int transactionIndex = getTransactionIndexByUserId(userId);
+    	String date = transactions[transactionIndex][2];
+    	return LocalDate.parse(date).plusDays(returnPeriod).toString();
     }
 
     // Book Check
