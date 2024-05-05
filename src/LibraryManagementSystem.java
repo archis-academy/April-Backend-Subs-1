@@ -16,9 +16,10 @@ public class LibraryManagementSystem {
     
     /*
      * This method takes the user ID as a parameter and returns the index of the same user in the 'transactions' array.
+     * If the user has made no transactions and is not in the array, it returns -1.
      */
     public static int getTransactionIndexByUserId(String userId) {
-    	int transactionIndex = 0;
+    	int transactionIndex = -1;
     	for (int i = 0; i < transactionQuantity; i++) {
 			if (transactions[i][0].equals(userId)) {
 				transactionIndex = i;
