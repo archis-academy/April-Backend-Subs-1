@@ -18,37 +18,42 @@ public class LibraryManagementSystem {
      */
     public static void searchBooks(String anything) {
     	boolean printed = false; // to check whether any message is printed or not.
-    	
     	for (int i = 0; i < bookQuantity; i++) {
 			if (books[i][0].equals(anything)) {
-				System.out.println("Tittle: " + books[i][0]);
-				System.out.println("Author: " + books[i][1]);
-				System.out.println("ISBN: " + books[i][2]);
-				System.out.println("Page Number: " + books[i][3]);
+				printBooks(books[i][0],books[i][1],books[i][2],books[i][3]);
 				printed = true;
 				break;
 			}
 			else if (books[i][1].equals(anything)) {
-				System.out.println("Tittle: " + books[i][0]);
-				System.out.println("Author: " + books[i][1]);
-				System.out.println("ISBN: " + books[i][2]);
-				System.out.println("Page Number: " + books[i][3]);
+				printBooks(books[i][0],books[i][1],books[i][2],books[i][3]);
 				printed = true;
 			}
 			else if (books[i][2].equals(anything)) {
-				System.out.println("Tittle: " + books[i][0]);
-				System.out.println("Author: " + books[i][1]);
-				System.out.println("ISBN: " + books[i][2]);
-				System.out.println("Page Number: " + books[i][3]);
+				printBooks(books[i][0],books[i][1],books[i][2],books[i][3]);
 				printed = true;
 				break;
 			}
 		}
     	
-    	if (printed == false) 
+    	if (!printed)
 			System.out.println("No book title, author or ISBN number matching this string value is found.");
     }
-    
+
+	/**
+	 * This method is responsible for printing the books details
+	 * @param title
+	 * @param author
+	 * @param ISBN
+	 * @param pageNumber
+	 * @return void
+	 */
+	private static void printBooks(String title,String author,String ISBN,String pageNumber){
+		System.out.println("Title: " + title);
+		System.out.println("Author: " + author);
+		System.out.println("ISBN: " + ISBN);
+		System.out.println("Page Number: " + pageNumber);
+	}
+
     /*
      * This method checks whether the book with the given ISBN exists in the library.
      * If the book exists, it returns the index of the book; otherwise, it returns -1.
@@ -70,8 +75,9 @@ public class LibraryManagementSystem {
      * Otherwise, it prints a message that the book was successfully added.
      */
     public static void addBook(String tittle, String author, String ISBN, String pageNumber) {
+		String response = "Adding book has been completed successfully.";
     	if (getBookIndexByISBN(ISBN) == -1) {
-			System.out.println("This book is already available in the library.");
+			response = "This book is already available in the library.";
 		}
     	else {
         	books[bookQuantity][0] = tittle;
@@ -79,9 +85,8 @@ public class LibraryManagementSystem {
         	books[bookQuantity][2] = ISBN;
         	books[bookQuantity][3] = pageNumber;
         	bookQuantity++;
-        	
-        	System.out.println("Adding book has been completed successfully.");
 		}
+		System.out.println(response);
     }
 
     // Book Check
@@ -98,7 +103,6 @@ public class LibraryManagementSystem {
 
    // CountTotalBook
     public static void countTotalBooks(){
-        int totalBooks=bookQuantity;
-        System.out.println("Total number of the books: " + totalBooks);
+        System.out.println("Total number of the books: " + bookQuantity);
     }
 }
