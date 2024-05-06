@@ -11,6 +11,41 @@ public class LibraryManagementSystem {
     public static void main(String[] args) {
  
     }
+    
+    /*
+     * This method checks whether the book with the given ISBN exists in the library.
+     * If the book exists, it returns the index of the book; otherwise, it returns -1.
+     */
+    public static int getBookIndexByISBN(String ISBN) {
+    	int indexOfExistBook = -1;
+    	for (int i = 0; i < bookQuantity; i++) {
+			if (ISBN.equals(books[i][2])) {
+				indexOfExistBook = i;
+				break;
+			}
+		}
+    	return indexOfExistBook;
+    }
+    
+    /*
+     * This method adds the given book to the library.
+     * If the book exists, it prints a message indicating this.
+     * Otherwise, it prints a message that the book was successfully added.
+     */
+    public static void addBook(String tittle, String author, String ISBN, String pageNumber) {
+    	if (getBookIndexByISBN(ISBN) == -1) {
+			System.out.println("This book is already available in the library.");
+		}
+    	else {
+        	books[bookQuantity][0] = tittle;
+        	books[bookQuantity][1] = author;
+        	books[bookQuantity][2] = ISBN;
+        	books[bookQuantity][3] = pageNumber;
+        	bookQuantity++;
+        	
+        	System.out.println("Adding book has been completed successfully.");
+		}
+    }
 
     // Book Check
     public  static  boolean  checkBook(String ISBN){
