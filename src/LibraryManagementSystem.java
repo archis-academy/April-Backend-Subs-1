@@ -15,6 +15,30 @@ public class LibraryManagementSystem {
     }
     
     /*
+     * This method takes the user ID as a parameter and returns the index of the same user in the 'transactions' array.
+     * If the user has made no transactions (not in the array), it returns -1.
+     */
+    public static int getTransactionIndexByUserId(String userId) {
+    	int transactionIndex = -1;
+    	for (int i = 0; i < transactionQuantity; i++) {
+			if (transactions[i][0].equals(userId)) {
+				transactionIndex = i;
+				break;
+			}
+		}
+    	return transactionIndex;
+    }
+    
+    /*
+     * This method returns the return deadline of the book borrowed by the specified user. (15 days)
+     */
+    public static String checkBookReturnDeadline(String userId) {
+    	int transactionIndex = getTransactionIndexByUserId(userId);
+    	String date = transactions[transactionIndex][2];
+    	return LocalDate.parse(date).plusDays(15).toString();
+    }
+    
+    /*
      * This method takes a string value as a parameter (title, author or ISBN)
      * and lists the name, author, ISBN and page numbers of the book or books that match this string value.
      */
@@ -89,31 +113,6 @@ public class LibraryManagementSystem {
         	bookQuantity++;
 		}
 		System.out.println(response);
-    }
-    
-    /*
-     * This method takes the user ID as a parameter and returns the index of the same user in the 'transactions' array.
-     * If the user has made no transactions and is not in the array, it returns -1.
-     */
-    public static int getTransactionIndexByUserId(String userId) {
-    	int transactionIndex = -1;
-    	for (int i = 0; i < transactionQuantity; i++) {
-			if (transactions[i][0].equals(userId)) {
-				transactionIndex = i;
-				break;
-			}
-		}
-    	return transactionIndex;
-    }
-    
-    /*
-     * This method takes the user ID and the duration for how long the book will stay with the user (in days) as parameters.
-     * It returns the deadline of the book.
-     */
-    public static String checkBookReturnDeadline(String userId, int returnPeriod) {
-    	int transactionIndex = getTransactionIndexByUserId(userId);
-    	String date = transactions[transactionIndex][2];
-    	return LocalDate.parse(date).plusDays(returnPeriod).toString();
     }
 
     // Book Check
