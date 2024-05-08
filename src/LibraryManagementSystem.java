@@ -124,27 +124,7 @@ public class LibraryManagementSystem {
     public static void countTotalBooks(){
         System.out.println("Total number of the books: " + bookQuantity);
     }
-
-
-	/*
-	   * This method allows returning the given book.
-       * If the book has been returned, it prints a message stating this.
-	*/
-	public  static  void returnBook(String userID,String ISBN){
-		boolean isBookReturned=false;
-		for(int i =0; i<transactionQuantity;i++){
-			if(transactions[i][0].equals(userID)&& transactions[i][1].equals(ISBN)){
-				isBookReturned =true;
-				break;
-			}
-		}
-		if(isBookReturned){
-			System.out.println("Book returned successfully.");
-		}else {
-			System.out.println("This book has already been returned");
-		}
-	}
-
+	
 }
 
 
