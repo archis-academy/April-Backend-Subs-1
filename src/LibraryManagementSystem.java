@@ -124,7 +124,7 @@ public class LibraryManagementSystem {
     public static void countTotalBooks(){
         System.out.println("Total number of the books: " + bookQuantity);
     }
-	
+
 }
 
 
