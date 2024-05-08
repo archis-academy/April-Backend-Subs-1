@@ -13,6 +13,23 @@ public class LibraryManagementSystem {
     public static void main(String[] args) {
     	
     }
+
+	/*
+	  *This method takes a  value as a parameter (email, password or userIndex)
+	  *It checks whether there is any invalid entry.
+     */
+	public static  boolean checkPassword(String email,String password,int userIndex){
+		return users[userIndex][2].equals(email)&& users[userIndex][3].equals(password);
+	}
+
+	public  static void printCheckPassword(String email,String password,int userIndex){
+		String response="Login Successful";
+		boolean result=checkPassword(email,password,userIndex);
+		if (result == false){
+			response = "Login Failed ";
+		}
+		System.out.println(response);
+	}
     
     /*
      * This method takes a string value as a parameter (title, author or ISBN)
@@ -113,16 +130,10 @@ public class LibraryManagementSystem {
 	   * This method allows returning the given book.
        * If the book has been returned, it prints a message stating this.
 	*/
-	public  static  void returnBook(){
-		Scanner scanner =new Scanner(System.in);
-		System.out.println("Enter the ID of the patron : ");
-		String patronID=scanner.nextLine();
-		System.out.println("Enter the ISBN of the returned book:");
-		String bookISBN=scanner.nextLine();
-
+	public  static  void returnBook(String userID,String ISBN){
 		boolean isBookReturned=false;
 		for(int i =0; i<transactionQuantity;i++){
-			if(transactions[i][0].equals(patronID)&& transactions[i][1].equals(bookISBN)){
+			if(transactions[i][0].equals(userID)&& transactions[i][1].equals(ISBN)){
 				isBookReturned =true;
 				break;
 			}
@@ -133,6 +144,7 @@ public class LibraryManagementSystem {
 			System.out.println("This book has already been returned");
 		}
 	}
+
 }
 
 
