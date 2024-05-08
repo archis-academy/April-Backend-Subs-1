@@ -1,3 +1,5 @@
+import java.time.LocalDate;
+
 public class LibraryManagementSystem {
 
     private static final int INDEX = 100;
@@ -47,6 +49,51 @@ public class LibraryManagementSystem {
     	System.out.println(response);
     }
     
+    /*
+     * This method checks whether the specified user is eligible to borrow a book from the library.
+     * Firstly, it checks if the user has any transaction record in the 'transactions' array. If not, it returns true.
+     * If there is a transaction record, it checks the return deadline of the borrowed but not yet returned book.
+     * If the return deadline is later than today, it returns true;
+     * If it is earlier than today, (the return deadline has passed), it returns false.
+     */
+    public static boolean checkPatronEligibilityForCheckout(String userId) {
+    	boolean eligibility = true;
+    	int transactionIndex = getTransactionIndexByUserId(userId);
+    	String returnDeadline = checkBookReturnDeadline(userId);
+    	
+    	if (transactionIndex != -1) {
+			if (LocalDate.parse(returnDeadline).isBefore(LocalDate.now())) {
+				eligibility = false;
+			}
+		}
+    	
+    	return eligibility;
+    }
+    
+    /*
+     * This method takes the user ID as a parameter and returns the index of the same user in the 'transactions' array.
+     * If the user has made no transactions (not in the array), it returns -1.
+     */
+    public static int getTransactionIndexByUserId(String userId) {
+    	int transactionIndex = -1;
+    	for (int i = 0; i < transactionQuantity; i++) {
+			if (transactions[i][0].equals(userId)) {
+				transactionIndex = i;
+				break;
+			}
+		}
+    	return transactionIndex;
+    }
+    
+    /*
+     * This method returns the return deadline of the book borrowed by the specified user. (15 days)
+     */
+    public static String checkBookReturnDeadline(String userId) {
+    	int transactionIndex = getTransactionIndexByUserId(userId);
+    	String date = transactions[transactionIndex][2];
+    	return LocalDate.parse(date).plusDays(15).toString();
+    }
+
     /*
      * This method takes a string value as a parameter (title, author or ISBN)
      * and lists the name, author, ISBN and page numbers of the book or books that match this string value.
