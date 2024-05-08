@@ -12,6 +12,14 @@ public class LibraryManagementSystem {
     	
     }
     
+    // This method allows users to make book reservations.
+    public static void reserveBook(String ISBN) {
+		String response = "Book reservation has been completed successfully.";
+    	if (getBookIndexByISBN(ISBN) == -1)
+			response = "This book is currently not available in the library.";
+    	System.out.println(response);
+    }
+    
     /*
      * This method checks whether the user with the given ID exists in the library system.
      * If the user exists, it returns the index of the user; otherwise, it returns -1.
@@ -102,16 +110,14 @@ public class LibraryManagementSystem {
      * Otherwise, it prints a message that the book was successfully added.
      */
     public static void addBook(String tittle, String author, String ISBN, String pageNumber) {
-		String response = "Adding book has been completed successfully.";
+		String response = "This book is already available in the library.";
     	if (getBookIndexByISBN(ISBN) == -1) {
-			response = "This book is already available in the library.";
-		}
-    	else {
         	books[bookQuantity][0] = tittle;
         	books[bookQuantity][1] = author;
         	books[bookQuantity][2] = ISBN;
         	books[bookQuantity][3] = pageNumber;
         	bookQuantity++;
+			response = "Adding book has been completed successfully.";
 		}
 		System.out.println(response);
     }
