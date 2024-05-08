@@ -13,6 +13,33 @@ public class LibraryManagementSystem {
     }
     
     /*
+     * This method checks whether the user with the given ID exists in the library system.
+     * If the user exists, it returns the index of the user; otherwise, it returns -1.
+     */
+    public static int getUserIndexByUserId(String userId) {
+    	int userIndex = -1;
+    	for (int i = 0; i < userQuantity; i++) {
+			if (users[i][1].equals(userId)) {
+				userIndex = i;
+				break;
+			}
+		}
+    	return userIndex;
+    }
+    
+    // This method updates the user's email and password.
+    public static void updatePatronInfo(String userId, String newEmail, String newPassword) {
+    	int userIndex = getUserIndexByUserId(userId);
+    	String response = "There is no such user in the library system.";
+    	if (userIndex != -1) {
+        	users[userIndex][2] = newEmail;
+        	users[userIndex][3] = newPassword;
+        	response = "The user information has been successfully updated.";
+		}
+    	System.out.println(response);
+    }
+    
+    /*
      * This method takes a string value as a parameter (title, author or ISBN)
      * and lists the name, author, ISBN and page numbers of the book or books that match this string value.
      */
