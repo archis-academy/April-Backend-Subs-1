@@ -113,25 +113,33 @@ public class LibraryManagementSystem {
 	   * This method allows returning the given book.
        * If the book has been returned, it prints a message stating this.
 	*/
-	public  static  void returnBook(){
-		Scanner scanner =new Scanner(System.in);
-		System.out.println("Enter the ID of the patron : ");
-		String patronID=scanner.nextLine();
-		System.out.println("Enter the ISBN of the returned book:");
-		String bookISBN=scanner.nextLine();
-
+	public  static  void returnBook(String userID,String tittle,String author,String ISBN,String pageNumber){
 		boolean isBookReturned=false;
 		for(int i =0; i<transactionQuantity;i++){
-			if(transactions[i][0].equals(patronID)&& transactions[i][1].equals(bookISBN)){
+			if(transactions[i][0].equals(userID)&& transactions[i][1].equals(ISBN)){
 				isBookReturned =true;
 				break;
 			}
 		}
+		String [][] transactionClone=new String[transactionQuantity - 1][3];
+		for(int i = 0; i<transactionQuantity;i++){
+			if(transactions[i][0].equals(userID)&& transactions[i][1].equals(ISBN)){
+				continue;
+			}
+			transactionClone[i][0]=transactions[i][0];
+			transactionClone[i][1]=transactions[i][1];
+			transactionClone[i][2]=transactions[i][2];
+		}
+
+		addBook(tittle,author,ISBN,pageNumber);
+		
 		if(isBookReturned){
 			System.out.println("Book returned successfully.");
 		}else {
 			System.out.println("This book has already been returned");
 		}
+		transactionQuantity--;
+		bookQuantity ++;
 	}
 }
 
