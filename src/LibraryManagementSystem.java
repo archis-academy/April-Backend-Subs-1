@@ -181,6 +181,26 @@ public class LibraryManagementSystem {
         return response;
     }
 
+    /*
+        *"If a book is unavailable, it is checked whether it exists or not."
+        * "If the book exists, it runs the code to display the existing book."
+    */
+    public static void viewAvailableBooks(){
+        boolean isEmpty=true;
+        if(bookQuantity==0){
+            isEmpty=false;
+        }
+        if(isEmpty==false){
+            System.out.println("Not Available Books");
+        }
+        else{
+            System.out.println("Available books");
+            for(int i=0;i<bookQuantity;i++){
+				printBooks(books[i][0],books[i][1],books[i][2],books[i][3]);
+            }
+         }
+    }
+	
    // CountTotalBook
     public static void countTotalBooks(){
         System.out.println("Total number of the books: " + bookQuantity);
