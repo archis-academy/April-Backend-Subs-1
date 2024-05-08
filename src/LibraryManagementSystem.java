@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class LibraryManagementSystem {
 
     private static final int INDEX = 100;
@@ -105,4 +107,32 @@ public class LibraryManagementSystem {
     public static void countTotalBooks(){
         System.out.println("Total number of the books: " + bookQuantity);
     }
+
+
+	/*
+	   * This method allows returning the given book.
+       * If the book has been returned, it prints a message stating this.
+	*/
+	public  static  void returnBook(){
+		Scanner scanner =new Scanner(System.in);
+		System.out.println("Enter the ID of the patron : ");
+		String patronID=scanner.nextLine();
+		System.out.println("Enter the ISBN of the returned book:");
+		String bookISBN=scanner.nextLine();
+
+		boolean isBookReturned=false;
+		for(int i =0; i<transactionQuantity;i++){
+			if(transactions[i][0].equals(patronID)&& transactions[i][1].equals(bookISBN)){
+				isBookReturned =true;
+				break;
+			}
+		}
+		if(isBookReturned){
+			System.out.println("Book returned successfully.");
+		}else {
+			System.out.println("This book has already been returned");
+		}
+	}
 }
+
+
