@@ -14,10 +14,24 @@ public class LibraryManagementSystem {
     	
     }
     
+    // This method updates the book's name, author name and page number.
+    public static void updateBook(String ISBN, String newBookName, String newAuthorName, String newPageNumber) {
+    	int bookIndex = getBookIndexByISBN(ISBN);
+    	String response = "There is no such book in the library.";
+    	if (bookIndex != -1) {
+        	books[bookIndex][0] = newBookName;
+        	books[bookIndex][1] = newAuthorName;
+        	books[bookIndex][3] = newPageNumber;
+        	response = "The book information has been successfully updated.";
+		}
+    	System.out.println(response);
+    }
+    
     // This method allows users to make book reservations.
     public static void reserveBook(String ISBN) {
-		String response = "Book reservation has been completed successfully.";
-    	if (getBookIndexByISBN(ISBN) == -1)
+    	int bookIndex = getBookIndexByISBN(ISBN);
+		String response = "Book reservation has been completed successfully." + "\nReserved book: " + books[bookIndex][0];
+    	if (bookIndex == -1)
 			response = "This book is currently not available in the library.";
     	System.out.println(response);
     }
