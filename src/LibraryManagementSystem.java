@@ -1,11 +1,12 @@
+import java.time.LocalDate;
 import java.util.Scanner;
 
 public class LibraryManagementSystem {
 
     private static final int INDEX = 100;
-    private static final String[][] books = new String[INDEX][4]; // [BookName,AuthorName,ISBN,pageNumber]
-    private static final String[][] users = new String[INDEX][4]; // [FullName,ID,Email,Password]
-    private static final String[][] transactions = new String[INDEX][3]; // [userId,bookId,date]
+    private static  String[][] books = new String[INDEX][4]; // [BookName,AuthorName,ISBN,pageNumber]
+    private static  String[][] users = new String[INDEX][4]; // [FullName,ID,Email,Password]
+    private static  String[][] transactions = new String[INDEX][3]; // [userId,bookId,date]
     private static int bookQuantity = 0;
     private static int userQuantity = 0;
     private static int transactionQuantity = 0;
@@ -114,13 +115,10 @@ public class LibraryManagementSystem {
        * If the book has been returned, it prints a message stating this.
 	*/
 	public  static  void returnBook(String userID,String tittle,String author,String ISBN,String pageNumber){
-		boolean isBookReturned=false;
-		for(int i =0; i<transactionQuantity;i++){
-			if(transactions[i][0].equals(userID)&& transactions[i][1].equals(ISBN)){
-				isBookReturned =true;
-				break;
-			}
-		}
+		int transactionIndex=getTransactionIndexByUserId(userID);
+		String returnDeadline=checkBookReturnDeadLine(userID);
+
+
 		String [][] transactionClone=new String[transactionQuantity - 1][3];
 		for(int i = 0; i<transactionQuantity;i++){
 			if(transactions[i][0].equals(userID)&& transactions[i][1].equals(ISBN)){
@@ -130,10 +128,11 @@ public class LibraryManagementSystem {
 			transactionClone[i][1]=transactions[i][1];
 			transactionClone[i][2]=transactions[i][2];
 		}
-
+		transactions=transactionClone;
 		addBook(tittle,author,ISBN,pageNumber);
 		
-		if(isBookReturned){
+		if(transactionIndex != -1 && LocalDate.parse(returnDeadline).isBefore(LocalDate.now())){
+			System.out.println("The book was returned late");
 			System.out.println("Book returned successfully.");
 		}else {
 			System.out.println("This book has already been returned");
