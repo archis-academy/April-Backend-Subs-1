@@ -18,13 +18,14 @@ public class LibraryManagementSystem {
 	  *This method takes a  value as a parameter (email, password or userIndex)
 	  *It checks whether there is any invalid entry.
      */
-	public static  boolean checkPassword(String email,String password,int userIndex){
+	public static  boolean checkPassword(String email,String password,String userId){
+		int userIndex=getTransactionIndexByUserId(userId);
 		return users[userIndex][2].equals(email)&& users[userIndex][3].equals(password);
 	}
 
 	public  static void printCheckPassword(String email,String password,int userIndex){
 		String response="Login Successful";
-		boolean result=checkPassword(email,password,userIndex);
+		boolean result=checkPassword(email,password,userId);
 		if (result == false){
 			response = "Login Failed ";
 		}
@@ -119,6 +120,7 @@ public class LibraryManagementSystem {
         }
         return response;
     }
+	
 
    // CountTotalBook
     public static void countTotalBooks(){
