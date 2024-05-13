@@ -14,6 +14,86 @@ public class LibraryManagementSystem {
     	
     }
     
+    // This method takes an ISBN as a parameter and returns the author of that book.
+    public static String getAuthorByISBN(String ISBN) {
+    	String author = null;
+    	
+    	for (int i = 0; i < bookQuantity; i++) {
+			if (books[i][2].equals(ISBN)) {
+				author = books[i][1];
+			}
+		}
+    	return author;
+    }
+    
+    // This method checks whether the author whose name is taken as a parameter has multiple books in the library.
+    public static boolean authorHasMoreThanOneBook(String author) {
+    	boolean result = false;
+    	int authorsBooksCounter = 0;
+    	
+    	for (int i = 0; i < bookQuantity; i++) {
+			if (books[i][1].equals(author)) {
+				authorsBooksCounter++;
+			}
+			if (authorsBooksCounter > 1) {
+				result = true;
+				break;
+			}
+		}
+    	return result;
+    }
+    
+    // This method recommends a randomly selected book from the library to the user.
+    public static void randomBookRecommendation() {
+		int randomIndex = (int) (Math.random() * bookQuantity); // Selects a random number (index) between 0 and bookQuantity
+		System.out.println("Randomly selected book for recommendation:");
+		printBooks(books[randomIndex][0], books[randomIndex][1], books[randomIndex][2], books[randomIndex][3]);
+    }
+    
+    /*
+     * This method recommends a book to the user.
+     * If there are other books in the library by the authors of the books they have taken but not yet returned, it recommends those to the user.
+     * Otherwise, it recommends a random book.
+     */
+	public static void generateBookRecommendations(String userId) {
+		int transactionIndex = getTransactionIndexByUserId(userId);
+		String author = null;
+
+		if (transactionIndex == -1) { // If there is no transaction record
+			randomBookRecommendation();
+		}
+
+		else { // If there is a transaction record (one or more)
+			boolean printed = false; // To check whether any book recommendation is printed or not.
+			for (int i = 0; i < transactionQuantity; i++) {
+				if (transactions[i][0].equals(userId)) {
+					author = getAuthorByISBN(transactions[i][1]);
+
+					if (!authorHasMoreThanOneBook(author)) {
+						continue; 
+					}
+
+					else { // If the author has more than one book in the library
+						System.out.println("Other books available in the library by " + author + ", whose book you have previously taken:");
+						for (int j = 0; j < bookQuantity; j++) {
+							if (books[j][2].equals(transactions[i][1])) {
+								continue; // Skip the book already taken by the user to avoid recommending it again
+							}
+							if (books[j][1].equals(author)) {
+								printBooks(books[j][0], books[j][1], books[j][2], books[j][3]);
+								System.out.println();
+							}
+						}
+						printed = true;
+					}
+				}
+			}
+			if (!printed) {
+				randomBookRecommendation();
+			}
+		}
+	}
+    
     // This method allows users to make book reservations.
     public static void reserveBook(String ISBN) {
 		String response = "Book reservation has been completed successfully.";
