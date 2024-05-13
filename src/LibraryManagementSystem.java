@@ -20,7 +20,7 @@ public class LibraryManagementSystem {
 		int bookIndex=getBookIndexByISBN(ISBN);
 		String response="Book procurement process is starting";
 		if(bookIndex!=-1){
-			response="Book supply has been completed";
+			response="Book suggestion was received and we processed it.";
 		}
 		System.out.println(response);
 	 }
