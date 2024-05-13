@@ -119,7 +119,7 @@ public class LibraryManagementSystem {
 		String returnDeadline=checkBookReturnDeadLine(userID);
 
 
-		String [][] transactionClone=new String[transactionQuantity - 1][3];
+		String [][] transactionClone=new String[INDEX][3];
 		for(int i = 0; i<transactionQuantity;i++){
 			if(transactions[i][0].equals(userID)&& transactions[i][1].equals(ISBN)){
 				continue;
@@ -134,7 +134,11 @@ public class LibraryManagementSystem {
 		if(transactionIndex != -1 && LocalDate.parse(returnDeadline).isBefore(LocalDate.now())){
 			System.out.println("The book was returned late");
 			System.out.println("Book returned successfully.");
-		}else {
+		}
+		else if (transactionIndex != -1) {
+			System.out.println("Book returned successfully.");
+		}
+		else {
 			System.out.println("This book has already been returned");
 		}
 		transactionQuantity--;
