@@ -79,7 +79,7 @@ public class LibraryManagementSystem {
      */
     public static boolean checkPatronEligibilityForCheckout(String userId) {
     	boolean eligibility = true;
-    	int transactionIndex = getTransactionIndexByUserId(userId);
+    	int transactionIndex = getUserIndexByUserId(userId);
     	String returnDeadline = checkBookReturnDeadline(userId);
     	
     	if (transactionIndex != -1) {
