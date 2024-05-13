@@ -14,7 +14,6 @@ public class LibraryManagementSystem {
     private static int transactionQuantity = 0;
 
     public static void main(String[] args) {
-    	
     }
     
     // This method updates the book's name, author name and page number.
@@ -175,7 +174,8 @@ public class LibraryManagementSystem {
      */
     public static void addBook(String tittle, String author, String ISBN, String pageNumber) {
 		String response = "This book is already available in the library.";
-    	if (getBookIndexByISBN(ISBN) == -1) {
+		//todo: create a method that generates ISBN for our books
+    	if (getBookIndexByISBN(ISBN) == -1) { //todo: it should also the name and author name
         	books[bookQuantity][0] = tittle;
         	books[bookQuantity][1] = author;
         	books[bookQuantity][2] = ISBN;
@@ -207,7 +207,7 @@ public class LibraryManagementSystem {
         if(bookQuantity==0){
             isEmpty=false;
         }
-        if(isEmpty==false){
+        if(!isEmpty){
             System.out.println("Not Available Books");
         }
         else{
@@ -230,7 +230,7 @@ public class LibraryManagementSystem {
 	*/
 	public  static  void returnBook(String userID,String tittle,String author,String ISBN,String pageNumber){
 		int transactionIndex=getTransactionIndexByUserId(userID);
-		String returnDeadline=checkBookReturnDeadLine(userID);
+		String returnDeadline=checkBookReturnDeadline(userID);
 
 
 		String [][] transactionClone=new String[INDEX][3];
