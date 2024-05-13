@@ -23,7 +23,7 @@ public class LibraryManagementSystem {
 		return users[userIndex][2].equals(email)&& users[userIndex][3].equals(password);
 	}
 
-	public  static void printCheckPassword(String email,String password,int userIndex){
+	public  static void printCheckPassword(String email,String password,String userId){
 		String response="Login Successful";
 		boolean result=checkPassword(email,password,userId);
 		if (result == false){
