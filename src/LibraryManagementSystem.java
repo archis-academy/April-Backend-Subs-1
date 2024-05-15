@@ -18,6 +18,36 @@ public class LibraryManagementSystem {
 
     }
 
+    /*
+     *This method returns the index of the book that matches the given book title and author.
+     * If there is no such book, it returns -1.
+     */
+    public static int getBookIndexByTittleAndAuthor(String tittle, String author) {
+        int bookIndex = -1;
+        for (int i = 0; i < bookQuantity; i++) {
+            if (books[i][0].equals(tittle) && books[i][1].equals(author)) {
+                bookIndex = i;
+                break;
+            }
+        }
+        return bookIndex;
+    }
+
+    /*
+     * This method creates a new array without the book to be deleted.
+     *Then it assigns this new array to the 'books' array, effectively removing the book and reducing the size of the array.
+     */
+    public static void truncateBooksArrayDeletion(String tittle, String author) {
+        int bookIndex = getBookIndexByTittleAndAuthor(tittle, author);
+        String[][] booksClone = new String[bookQuantity - 1][4];
+        for (int i = 0; i < bookQuantity; i++) {
+            if (bookIndex == i) {
+                continue;
+            }
+            booksClone[i] = books[i];
+        }
+        books = booksClone;
+    }
 
     /*
      *This method checks if the book with the given ISBN is available in the library.
