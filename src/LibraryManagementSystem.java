@@ -14,6 +14,22 @@ public class LibraryManagementSystem {
     public static void main(String[] args) {
     	
     }
+
+
+	/*
+      *This method checks if the book with the given ISBN is available in the library.
+	  * Returns the index of the book if the recommended book exists; Otherwise, it returns -1 and returns a message to the user.
+	 */
+	public static void requestBook(String tittle,String author){
+		boolean result=isBookExistWithAuthor(tittle,author);
+		String response="Book procurement process is starting";
+		if(result){
+			response="This book is available in the library and a book suggestion was received and we processed it..";
+		}
+		System.out.println(response);
+	}
+	/*
+
     
     // This method takes an ISBN as a parameter and returns the author of that book.
     public static String getAuthorByISBN(String ISBN) {
@@ -187,6 +203,7 @@ public class LibraryManagementSystem {
     }
 
     /*
+
      * This method takes a string value as a parameter (title, author or ISBN)
      * and lists the name, author, ISBN and page numbers of the book or books that match this string value.
      */
