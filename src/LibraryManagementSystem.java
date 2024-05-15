@@ -30,7 +30,7 @@ public class LibraryManagementSystem {
 		String response="Login Successful";
 		boolean result=checkPassword(email,password,userId);
 		if (result == false){
-			response = "Login Failed ";
+			response = "Login Failed please check your password or email.";
 		}
 		System.out.println(response);
 	}
