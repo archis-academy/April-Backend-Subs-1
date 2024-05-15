@@ -19,14 +19,14 @@ public class LibraryManagementSystem {
       *This method checks if the book with the given ISBN is available in the library.
 	  * Returns the index of the book if the recommended book exists; Otherwise, it returns -1 and returns a message to the user.
 	 */
-	public static void requestBook(String ISBN){
-		int bookIndex=getBookIndexByISBN(ISBN);
+	public static void requestBook(String tittle,String author){
+		boolean result=isBookExistWithAuthor(tittle,author);
 		String response="Book procurement process is starting";
-		if(bookIndex!=-1){
+		if(result){
 			response="This book is available in the library and a book suggestion was received and we processed it..";
 		}
 		System.out.println(response);
-	 }
+	}
 	/*
 
     
