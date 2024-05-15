@@ -51,10 +51,6 @@ public class LibraryManagementSystem {
 		printBooks(books[randomIndex][0], books[randomIndex][1], books[randomIndex][2], books[randomIndex][3]);
     }
     
-    // Bu metod şuan bütün kullanıcılara random bir kitap önerir, çünkü kullanıcının daha önce aldığı kitabın yazarına
-    // erişemiyorum (transactions dizisinde yazar tutulmuyor)
-    // Eğer transactions dizisinde yazar da tutulursa metod kullanıcının aldığı kitabın yazarının (varsa) kütüphanedeki
-    // diğer kitaplarını önerir, yoksa random bir kitap önerir.
     /*
      * This method recommends a book to the user.
      * If there are other books in the library by the authors of the books they have taken but not yet returned, it recommends those to the user.
