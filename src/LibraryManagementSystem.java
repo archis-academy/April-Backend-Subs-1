@@ -1,32 +1,18 @@
 import java.time.LocalDate;
 
-
-
-
 public class LibraryManagementSystem {
 
     private static final int INDEX = 100;
-    private static  String[][] books = new String[INDEX][4]; // [BookName,AuthorName,ISBN,pageNumber]
-    private static  String[][] users = new String[INDEX][4]; // [FullName,ID,Email,Password]
-    private static  String[][] transactions = new String[INDEX][3]; // [userId,bookId,date]
+    private static String[][] books = new String[INDEX][4]; // [BookName,AuthorName,ISBN,pageNumber]
+    private static String[][] users = new String[INDEX][4]; // [FullName,ID,Email,Password]
+    private static String[][] transactions = new String[INDEX][3]; // [userId,bookId,date]
     private static int bookQuantity = 0;
     private static int userQuantity = 0;
     private static int transactionQuantity = 0;
+    private static int bookIDKeeper = 1;
 
     public static void main(String[] args) {
-    }
-    
-    // This method updates the book's name, author name and page number.
-    public static void updateBook(String ISBN, String newBookName, String newAuthorName, String newPageNumber) {
-    	int bookIndex = getBookIndexByISBN(ISBN);
-    	String response = "There is no such book in the library.";
-    	if (bookIndex != -1) {
-        	books[bookIndex][0] = newBookName;
-        	books[bookIndex][1] = newAuthorName;
-        	books[bookIndex][3] = newPageNumber;
-        	response = "The book information has been successfully updated.";
-		}
-    	System.out.println(response);
+    	
     }
     
     // This method takes an ISBN as a parameter and returns the author of that book.
@@ -41,30 +27,34 @@ public class LibraryManagementSystem {
     	return author;
     }
     
-    // This method checks whether the author whose name is taken as a parameter has multiple books in the library.
-    public static boolean authorHasMoreThanOneBook(String author) {
-    	boolean result = false;
-    	int authorsBooksCounter = 0;
+    /*
+     * This method checks whether the given author has a book in the library.
+     * If they have one or more books, it returns the index of the first book.
+     * Otherwise, it returns -1.
+     */
+    public static int getFirstBookIndexByAuthor(String author) {
+    	int bookIndex = -1;
     	
     	for (int i = 0; i < bookQuantity; i++) {
 			if (books[i][1].equals(author)) {
-				authorsBooksCounter++;
-			}
-			if (authorsBooksCounter > 1) {
-				result = true;
+				bookIndex = i;
 				break;
 			}
 		}
-    	return result;
+    	return bookIndex;
     }
     
     // This method recommends a randomly selected book from the library to the user.
     public static void randomBookRecommendation() {
 		int randomIndex = (int) (Math.random() * bookQuantity); // Selects a random number (index) between 0 and bookQuantity
-		System.out.println("Randomly selected book for recommendation:");
+		System.out.println("Recommended book for you:");
 		printBooks(books[randomIndex][0], books[randomIndex][1], books[randomIndex][2], books[randomIndex][3]);
     }
     
+    // Bu metod şuan bütün kullanıcılara random bir kitap önerir, çünkü kullanıcının daha önce aldığı kitabın yazarına
+    // erişemiyorum (transactions dizisinde yazar tutulmuyor)
+    // Eğer transactions dizisinde yazar da tutulursa metod kullanıcının aldığı kitabın yazarının (varsa) kütüphanedeki
+    // diğer kitaplarını önerir, yoksa random bir kitap önerir.
     /*
      * This method recommends a book to the user.
      * If there are other books in the library by the authors of the books they have taken but not yet returned, it recommends those to the user.
@@ -84,16 +74,13 @@ public class LibraryManagementSystem {
 				if (transactions[i][0].equals(userId)) {
 					author = getAuthorByISBN(transactions[i][1]);
 
-					if (!authorHasMoreThanOneBook(author)) {
-						continue; 
+					if (getFirstBookIndexByAuthor(author) == -1) {
+						continue;
 					}
 
-					else { // If the author has more than one book in the library
+					else { // If the author has one or more books in the library
 						System.out.println("Other books available in the library by " + author + ", whose book you have previously taken:");
 						for (int j = 0; j < bookQuantity; j++) {
-							if (books[j][2].equals(transactions[i][1])) {
-								continue; // Skip the book already taken by the user to avoid recommending it again
-							}
 							if (books[j][1].equals(author)) {
 								printBooks(books[j][0], books[j][1], books[j][2], books[j][3]);
 								System.out.println();
@@ -108,6 +95,19 @@ public class LibraryManagementSystem {
 			}
 		}
 	}
+    
+    // This method updates the book's name, author name and page number.
+    public static void updateBook(String ISBN, String newBookName, String newAuthorName, String newPageNumber) {
+    	int bookIndex = getBookIndexByISBN(ISBN);
+    	String response = "There is no such book in the library.";
+    	if (bookIndex != -1) {
+        	books[bookIndex][0] = newBookName;
+        	books[bookIndex][1] = newAuthorName;
+        	books[bookIndex][3] = newPageNumber;
+        	response = "The book information has been successfully updated.";
+		}
+    	System.out.println(response);
+    }
     
     // This method allows users to make book reservations.
     public static void reserveBook(String ISBN) {
@@ -247,15 +247,45 @@ public class LibraryManagementSystem {
     	return indexOfExistBook;
     }
     
+    // This method generates an ISBN for a book according to the current order.
+    public static String generateISBN() {
+    	String bookID = String.valueOf(bookIDKeeper);
+    	String ISBN = "";
+    	
+    	if (bookID.length() == 1) {
+    		ISBN += "ISBN00" + bookID;
+		}
+    	else if (bookID.length() == 2) {
+    		ISBN += "ISBN0" + bookID;
+		}
+    	else {
+    		ISBN += "ISBN" + bookID;
+		}
+    	bookIDKeeper++;
+    	return ISBN;
+    }
+    
+    // This method checks whether there is a book in the library with the given title and author.
+    public static boolean isBookExistWithAuthor(String tittle, String author) {
+    	boolean result = false;
+    	for (int i = 0; i < bookQuantity; i++) {
+			if (books[i][0].equals(tittle) && books[i][1].equals(author)) {
+				result = true;
+				break;
+			}
+		}
+    	return result;
+    }
+    
     /*
      * This method adds the given book to the library.
      * If the book exists, it prints a message indicating this.
      * Otherwise, it prints a message that the book was successfully added.
      */
-    public static void addBook(String tittle, String author, String ISBN, String pageNumber) {
+    public static void addBook(String tittle, String author, String pageNumber) {
+    	String ISBN = generateISBN();
 		String response = "This book is already available in the library.";
-		//todo: create a method that generates ISBN for our books
-    	if (getBookIndexByISBN(ISBN) == -1) { //todo: it should also the name and author name
+    	if (getBookIndexByISBN(ISBN) == -1 && !isBookExistWithAuthor(tittle, author)) {
         	books[bookQuantity][0] = tittle;
         	books[bookQuantity][1] = author;
         	books[bookQuantity][2] = ISBN;
@@ -312,7 +342,6 @@ public class LibraryManagementSystem {
 		int transactionIndex=getTransactionIndexByUserId(userID);
 		String returnDeadline=checkBookReturnDeadline(userID);
 
-
 		String [][] transactionClone=new String[INDEX][3];
 		for(int i = 0; i<transactionQuantity;i++){
 			if(transactions[i][0].equals(userID)&& transactions[i][1].equals(ISBN)){
@@ -323,7 +352,10 @@ public class LibraryManagementSystem {
 			transactionClone[i][2]=transactions[i][2];
 		}
 		transactions=transactionClone;
-		addBook(tittle,author,ISBN,pageNumber);
+		books[bookQuantity][0] = tittle;
+		books[bookQuantity][1] = author;
+		books[bookQuantity][2] = ISBN;
+		books[bookQuantity][3] = pageNumber;
 		
 		if(transactionIndex != -1 && LocalDate.parse(returnDeadline).isBefore(LocalDate.now())){
 			System.out.println("The book was returned late");
