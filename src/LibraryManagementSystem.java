@@ -22,7 +22,7 @@ public class LibraryManagementSystem {
 	  *It checks whether there is any invalid entry.
      */
 	public static  boolean checkPassword(String email,String password,String userId){
-		int userIndex=getTransactionIndexByUserId(userId);
+		int userIndex=getUserIndexByUserId(userId);
 		return users[userIndex][2].equals(email)&& users[userIndex][3].equals(password);
 	}
 
@@ -79,7 +79,7 @@ public class LibraryManagementSystem {
      */
     public static boolean checkPatronEligibilityForCheckout(String userId) {
     	boolean eligibility = true;
-    	int transactionIndex = getUserIndexByUserId(userId);
+    	int transactionIndex = getTransactionIndexByUserId(userId);
     	String returnDeadline = checkBookReturnDeadline(userId);
     	
     	if (transactionIndex != -1) {
