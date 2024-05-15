@@ -258,6 +258,32 @@ public class LibraryManagementSystem {
 		transactionQuantity--;
 		bookQuantity ++;
 	}
+	public static void checkOutBook(String userId, String ISBN) {
+		int userIndex = getUserIndexByUserId(userId);
+		int bookIndex = getBookIndexByISBN(ISBN);
+		String response;
+
+		if (userIndex == -1) {
+			response = "There is no such user in the library system.";
+		} else if (bookIndex == -1) {
+			response = "This book is currently not available in the library.";
+		} else if (!checkPatronEligibilityForCheckout(userId)) {
+			response = "User is not eligible to borrow a book. Please return any overdue books.";
+		} else {
+			// Update the transaction record
+			transactions[transactionQuantity][0] = userId;
+			transactions[transactionQuantity][1] = ISBN;
+			transactions[transactionQuantity][2] = LocalDate.now().toString();
+			transactionQuantity++;
+
+			// Reduce the book quantity
+			bookQuantity--;
+
+			response = "The book has been successfully checked out.";
+		}
+
+		System.out.println(response);
+	}
 }
 
 
