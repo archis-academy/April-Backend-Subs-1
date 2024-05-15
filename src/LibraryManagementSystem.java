@@ -1,3 +1,6 @@
+
+
+
 import java.time.LocalDate;
 
 public class LibraryManagementSystem {
@@ -120,6 +123,24 @@ public class LibraryManagementSystem {
 		}
     	System.out.println(response);
     }
+
+	/*
+	  *This method takes a  value as a parameter (email, password or userIndex)
+	  *It checks whether there is any invalid entry.
+     */
+	public static  boolean checkPassword(String email,String password,String userId){
+		int userIndex=getUserIndexByUserId(userId);
+		return users[userIndex][2].equals(email)&& users[userIndex][3].equals(password);
+	}
+
+	public  static void printCheckPassword(String email,String password,String userId){
+		String response="Login Successful";
+		boolean result=checkPassword(email,password,userId);
+		if (result == false){
+			response = "Login Failed please check your password or email.";
+		}
+		System.out.println(response);
+	}
     
     // This method allows users to make book reservations.
     public static void reserveBook(String ISBN) {
@@ -320,6 +341,7 @@ public class LibraryManagementSystem {
         }
         return response;
     }
+	
 
     /*
         *"If a book is unavailable, it is checked whether it exists or not."
@@ -345,6 +367,7 @@ public class LibraryManagementSystem {
     public static void countTotalBooks(){
         System.out.println("Total number of the books: " + bookQuantity);
     }
+
 
 
 	/*
@@ -383,6 +406,7 @@ public class LibraryManagementSystem {
 		transactionQuantity--;
 		bookQuantity ++;
 	}
+
 }
 
 
