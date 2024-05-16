@@ -47,6 +47,7 @@ public class LibraryManagementSystem {
             booksClone[i] = books[i];
         }
         books = booksClone;
+        bookQuantity--;
     }
 
     /*
