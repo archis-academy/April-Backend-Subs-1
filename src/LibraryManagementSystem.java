@@ -1,6 +1,3 @@
-
-
-
 import java.time.LocalDate;
 
 public class LibraryManagementSystem {
@@ -17,8 +14,24 @@ public class LibraryManagementSystem {
     public static void main(String[] args) {
 
     }
-
-
+    
+    /*
+     * This method is used within the addBook method
+     * It increases the length of the books array by 1 when a book is added.
+     */
+    public static void extendBooksArrayOnAddition(String tittle, String author, String pageNumber, String ISBN) {
+    	String[][] booksClone = new String[bookQuantity + 1][4];
+    	for (int i = 0; i < bookQuantity; i++) {
+			booksClone[i] = books[i];
+		}
+        booksClone[bookQuantity][0] = tittle;
+        booksClone[bookQuantity][1] = author;
+        booksClone[bookQuantity][2] = ISBN;
+        booksClone[bookQuantity][3] = pageNumber;
+        bookQuantity++;
+        books = booksClone;
+    }
+    
     /*
      *This method checks if the book with the given ISBN is available in the library.
      * Returns the index of the book if the recommended book exists; Otherwise, it returns -1 and returns a message to the user.
@@ -306,11 +319,7 @@ public class LibraryManagementSystem {
         String ISBN = generateISBN();
         String response = "This book is already available in the library.";
         if (getBookIndexByISBN(ISBN) == -1 && !isBookExistWithAuthor(tittle, author)) {
-            books[bookQuantity][0] = tittle;
-            books[bookQuantity][1] = author;
-            books[bookQuantity][2] = ISBN;
-            books[bookQuantity][3] = pageNumber;
-            bookQuantity++;
+        	extendBooksArrayOnAddition(tittle, author, pageNumber, ISBN);
             response = "Adding book has been completed successfully.";
         }
         System.out.println(response);
