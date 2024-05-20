@@ -47,7 +47,7 @@ public class LibraryManagementSystem {
             booksClone[i] = books[i];
         }
         books = booksClone;
-        
+
     }
 
     /*
@@ -55,11 +55,10 @@ public class LibraryManagementSystem {
      * If they exist, it deletes the book and notifies the user with a message.
      */
     public static void deleteBook(String tittle, String author) {
-        int Index = getBookIndexByTittleAndAuthor(tittle, author);
+        int index = getBookIndexByTittleAndAuthor(tittle, author);
         String response;
-        if (Index == -1) {
-            response = "There is not book in library.";
-            return;
+        if (index == -1) {
+            response = "There is not book in library.";g
         } else {
             truncateBooksArrayDeletion(tittle, author);
             response = "The book has been successfully deleted .";
