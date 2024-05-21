@@ -355,15 +355,16 @@ public class LibraryManagementSystem {
         	return;
         }
 
-        String[][] transactionClone = new String[INDEX][4];
-        for (int i = 0; i < transactionQuantity; i++) {
+        String[][] transactionClone = new String[transactionQuantity - 1][4];
+        for (int i = 0, j = 0; i < transactionQuantity; i++, j++) {
             if (transactions[i][0].equals(userID) && transactions[i][1].equals(ISBN)) {
+            	j--;
                 continue;
             }
-            transactionClone[i][0] = transactions[i][0];
-            transactionClone[i][1] = transactions[i][1];
-            transactionClone[i][2] = transactions[i][2];
-            transactionClone[i][3] = transactions[i][3];
+            transactionClone[j][0] = transactions[i][0];
+            transactionClone[j][1] = transactions[i][1];
+            transactionClone[j][2] = transactions[i][2];
+            transactionClone[j][3] = transactions[i][3];
         }
         
         transactions = transactionClone;
