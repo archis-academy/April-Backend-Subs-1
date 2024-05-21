@@ -2,6 +2,9 @@
 
 
 import java.time.LocalDate;
+import java.util.Scanner;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LibraryManagementSystem {
 
@@ -15,7 +18,7 @@ public class LibraryManagementSystem {
     private static int bookIDKeeper = 1;
 
     public static void main(String[] args) {
-
+    
     }
 
 
@@ -100,6 +103,97 @@ public class LibraryManagementSystem {
         }
     }
 
+    public class LoginSystem {
+
+    // HashMap is used to store usernames and passwords.    
+    private static final Map<String, String> USERS = new HashMap<>();
+    static {
+        // Usernames and passwords
+        USERS.put("admin@gmail.com", "123456");
+        USERS.put("user1@example.com", "password1");
+        USERS.put("user2@example.com", "password2");
+    }
+
+
+    static void userMenu(){
+     Scanner scanner = new Scanner(System.in);
+        boolean exit = false;
+        // menü 
+        while (!exit) {
+            System.out.println("**MENU**");
+            System.out.println("1. Sign Up");
+            System.out.println("2. Log in");
+            System.out.println("3. Exit");
+            System.out.print("Please enter your selection : ");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); 
+
+            switch (choice) {
+                case 1:
+                    login(scanner);
+                    break;
+                case 2:
+                    signup(scanner);
+                    break;
+                case 3:
+                    System.out.println("Logging out");  
+                    System.exit(0);
+                default:
+                    System.out.println("Invalid choice");
+                }
+
+    }}
+static void login(Scanner scanner){
+    System.out.print("Mail: ");
+    String usermail = scanner.nextLine();
+    
+
+    if (!USERS.containsKey(usermail)) {
+        System.out.println("This email address is not registered. Please sign up.");
+        System.out.println("1. Create a new account.");
+        System.out.println("2. Return to the Main Menu.");
+        System.out.print("Please make your selection:");
+        int choice = scanner.nextInt();
+        scanner.nextLine(); 
+
+        if (choice == 1) {
+            signup(scanner);
+        }
+        return ;
+    }
+
+    System.out.print("Password: ");
+    String password = scanner.nextLine();
+
+    boolean loginSuccessful = USERS.get(usermail).equals(password);
+
+    if (loginSuccessful) {
+        System.out.println("Login successful.");
+    } else {
+        System.out.println("Login unsuccessful! Incorrect password.");
+    }
+}
+
+
+
+static void signup(Scanner scanner){
+
+    System.out.print("Mail address: ");
+    String newUsermail = scanner.nextLine();
+
+    if (USERS.containsKey(newUsermail)) {
+        System.out.println("This email address is already in use. Please register with another email address.");
+        return;
+    }
+
+    System.out.print("Password: ");
+    String newPassword = scanner.nextLine();
+
+    USERS.put(newUsermail, newPassword);
+    System.out.println("Account successfully created!");
+}
+
+}
     // This method updates the book's name, author name and page number.
     public static void updateBook(String ISBN, String newBookName, String newAuthorName, String newPageNumber) {
         int bookIndex = getBookIndexByISBN(ISBN);
