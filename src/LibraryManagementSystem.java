@@ -16,13 +16,16 @@ public class LibraryManagementSystem {
     }
     
     /*
-     * This method is used within the addBook method
+     * This method is used within the addBook method.
      * It increases the length of the books array by 1 when a book is added.
      */
     public static void extendBooksArrayOnAddition(String tittle, String author, String pageNumber, String ISBN) {
     	String[][] booksClone = new String[bookQuantity + 1][4];
     	for (int i = 0; i < bookQuantity; i++) {
-			booksClone[i] = books[i];
+			booksClone[i][0] = books[i][0];
+			booksClone[i][1] = books[i][1];
+			booksClone[i][2] = books[i][2];
+			booksClone[i][3] = books[i][3];
 		}
         booksClone[bookQuantity][0] = tittle;
         booksClone[bookQuantity][1] = author;
@@ -30,6 +33,21 @@ public class LibraryManagementSystem {
         booksClone[bookQuantity][3] = pageNumber;
         bookQuantity++;
         books = booksClone;
+    }
+    
+    /*
+     * This method adds the given book to the library.
+     * If the book exists, it prints a message indicating this.
+     * Otherwise, it prints a message that the book was successfully added.
+     */
+    public static void addBook(String tittle, String author, String pageNumber) {
+        String ISBN = generateISBN();
+        String response = "This book is already available in the library.";
+        if (getBookIndexByISBN(ISBN) == -1 && !isBookExistWithAuthor(tittle, author)) {
+        	extendBooksArrayOnAddition(tittle, author, pageNumber, ISBN);
+            response = "Adding book has been completed successfully.";
+        }
+        System.out.println(response);
     }
     
     /*
@@ -44,7 +62,6 @@ public class LibraryManagementSystem {
         }
         System.out.println(response);
     }
-
 
     // This method takes an ISBN as a parameter and returns the author of that book.
     public static String getAuthorByISBN(String ISBN) {
@@ -310,21 +327,6 @@ public class LibraryManagementSystem {
         return result;
     }
 
-    /*
-     * This method adds the given book to the library.
-     * If the book exists, it prints a message indicating this.
-     * Otherwise, it prints a message that the book was successfully added.
-     */
-    public static void addBook(String tittle, String author, String pageNumber) {
-        String ISBN = generateISBN();
-        String response = "This book is already available in the library.";
-        if (getBookIndexByISBN(ISBN) == -1 && !isBookExistWithAuthor(tittle, author)) {
-        	extendBooksArrayOnAddition(tittle, author, pageNumber, ISBN);
-            response = "Adding book has been completed successfully.";
-        }
-        System.out.println(response);
-    }
-
     // Book Check
     public static boolean checkBook(String ISBN) {
         boolean response = false;
@@ -336,7 +338,6 @@ public class LibraryManagementSystem {
         }
         return response;
     }
-
 
     /*
      *"If a book is unavailable, it is checked whether it exists or not."
@@ -358,7 +359,6 @@ public class LibraryManagementSystem {
     public static void countTotalBooks() {
         System.out.println("Total number of the books: " + bookQuantity);
     }
-
 
     /*
      * This method allows returning the given book.
