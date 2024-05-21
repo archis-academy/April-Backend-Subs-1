@@ -1,6 +1,4 @@
 
-
-
 import java.time.LocalDate;
 import java.util.Scanner;
 import java.util.HashMap;
@@ -18,7 +16,7 @@ public class LibraryManagementSystem {
     private static int bookIDKeeper = 1;
 
     public static void main(String[] args) {
-    
+    LoginSystem.userMenu();
     }
 
 
@@ -113,36 +111,38 @@ public class LibraryManagementSystem {
         USERS.put("user1@example.com", "password1");
         USERS.put("user2@example.com", "password2");
     }
+    public static void userMenu(){
+        Scanner scanner = new Scanner(System.in);
+           boolean exit = false;
+           // menü 
+           while (!exit) {
+               System.out.println("**MENU**");
+               System.out.println("1. Sign Up");
+               System.out.println("2. Log in");
+               System.out.println("3. Exit");
+               System.out.print("Please enter your selection : ");
+               int choice = scanner.nextInt();
+               scanner.nextLine(); 
+   
+               switch (choice) {
+                   case 1:
+                       login(scanner);
+                       break;
+                   case 2:
+                       signup(scanner);
+                       break;
+                   case 3:
+                       System.out.println("Logging out");  
+                       System.exit(0);
+                   default:
+                       System.out.println("Invalid choice");
+                   }
+   
+           }
 
+    }
 
-    static void userMenu(){
-     Scanner scanner = new Scanner(System.in);
-        boolean exit = false;
-        // menü 
-        while (!exit) {
-            System.out.println("**MENU**");
-            System.out.println("1. Sign Up");
-            System.out.println("2. Log in");
-            System.out.println("3. Exit");
-            System.out.print("Please enter your selection : ");
-            int choice = scanner.nextInt();
-            scanner.nextLine(); 
-
-            switch (choice) {
-                case 1:
-                    login(scanner);
-                    break;
-                case 2:
-                    signup(scanner);
-                    break;
-                case 3:
-                    System.out.println("Logging out");  
-                    System.exit(0);
-                default:
-                    System.out.println("Invalid choice");
-                }
-
-    }}
+  
 static void login(Scanner scanner){
     System.out.print("Mail: ");
     String usermail = scanner.nextLine();
