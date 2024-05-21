@@ -44,7 +44,10 @@ public class LibraryManagementSystem {
             if (bookIndex == i) {
                 continue;
             }
-            booksClone[i] = books[i];
+            booksClone[i][0] = books[i][0];
+            booksClone[i][1] = books[i][1];
+            booksClone[i][2] = books[i][2];
+            booksClone[i][3] = books[i][3];
         }
         books = booksClone;
 
@@ -58,7 +61,7 @@ public class LibraryManagementSystem {
         int index = getBookIndexByTittleAndAuthor(tittle, author);
         String response;
         if (index == -1) {
-            response = "There is not book in library.";g
+            response = "There is not book in library.";
         } else {
             truncateBooksArrayDeletion(tittle, author);
             response = "The book has been successfully deleted .";
