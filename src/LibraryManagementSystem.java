@@ -1,6 +1,3 @@
-
-
-
 import java.time.LocalDate;
 
 public class LibraryManagementSystem {
@@ -8,7 +5,7 @@ public class LibraryManagementSystem {
     private static final int INDEX = 100;
     private static String[][] books = new String[INDEX][4]; // [BookName,AuthorName,ISBN,pageNumber]
     private static String[][] users = new String[INDEX][4]; // [FullName,ID,Email,Password]
-    private static String[][] transactions = new String[INDEX][3]; // [userId,bookId,date]
+    private static String[][] transactions = new String[INDEX][4]; // [userId,bookId,date,authorName]
     private static int bookQuantity = 0;
     private static int userQuantity = 0;
     private static int transactionQuantity = 0;
@@ -17,7 +14,6 @@ public class LibraryManagementSystem {
     public static void main(String[] args) {
 
     }
-
 
     /*
      *This method checks if the book with the given ISBN is available in the library.
@@ -31,8 +27,7 @@ public class LibraryManagementSystem {
         }
         System.out.println(response);
     }
-
-
+    
     // This method takes an ISBN as a parameter and returns the author of that book.
     public static String getAuthorByISBN(String ISBN) {
         int bookIndex = getBookIndexByISBN(ISBN);
@@ -78,7 +73,7 @@ public class LibraryManagementSystem {
             boolean printed = false; // To check whether any book recommendation is printed or not.
             for (int i = 0; i < transactionQuantity; i++) {
                 if (transactions[i][0].equals(userId)) {
-                    author = getAuthorByISBN(transactions[i][1]);
+                    author = transactions[i][3];
 
                     if (getFirstBookIndexByAuthor(author) == -1) {
                         continue;
@@ -213,7 +208,6 @@ public class LibraryManagementSystem {
     }
 
     /*
-
      * This method takes a string value as a parameter (title, author or ISBN)
      * and lists the name, author, ISBN and page numbers of the book or books that match this string value.
      */
@@ -328,7 +322,6 @@ public class LibraryManagementSystem {
         return response;
     }
 
-
     /*
      *"If a book is unavailable, it is checked whether it exists or not."
      * "If the book exists, it runs the code to display the existing book."
@@ -350,7 +343,6 @@ public class LibraryManagementSystem {
         System.out.println("Total number of the books: " + bookQuantity);
     }
 
-
     /*
      * This method allows returning the given book.
      * If the book has been returned, it prints a message stating this.
@@ -358,32 +350,38 @@ public class LibraryManagementSystem {
     public static void returnBook(String userID, String tittle, String author, String ISBN, String pageNumber) {
         int transactionIndex = getTransactionIndexByUserId(userID);
         String returnDeadline = checkBookReturnDeadline(userID);
+        String response = null;
+        
+        if (transactionIndex != -1 && LocalDate.parse(returnDeadline).isBefore(LocalDate.now())) {
+        	response = "The book was returned late.\nBook returned successfully.";
+        } else if (transactionIndex != -1) {
+        	response = "Book returned successfully.";
+        } else {
+        	System.out.println("This book has already been returned");
+        	return;
+        }
 
-        String[][] transactionClone = new String[INDEX][3];
-        for (int i = 0; i < transactionQuantity; i++) {
+        String[][] transactionClone = new String[transactionQuantity - 1][4];
+        for (int i = 0, j = 0; i < transactionQuantity; i++, j++) {
             if (transactions[i][0].equals(userID) && transactions[i][1].equals(ISBN)) {
+            	j--;
                 continue;
             }
-            transactionClone[i][0] = transactions[i][0];
-            transactionClone[i][1] = transactions[i][1];
-            transactionClone[i][2] = transactions[i][2];
+            transactionClone[j][0] = transactions[i][0];
+            transactionClone[j][1] = transactions[i][1];
+            transactionClone[j][2] = transactions[i][2];
+            transactionClone[j][3] = transactions[i][3];
         }
+        
         transactions = transactionClone;
         books[bookQuantity][0] = tittle;
         books[bookQuantity][1] = author;
         books[bookQuantity][2] = ISBN;
         books[bookQuantity][3] = pageNumber;
-
-        if (transactionIndex != -1 && LocalDate.parse(returnDeadline).isBefore(LocalDate.now())) {
-            System.out.println("The book was returned late");
-            System.out.println("Book returned successfully.");
-        } else if (transactionIndex != -1) {
-            System.out.println("Book returned successfully.");
-        } else {
-            System.out.println("This book has already been returned");
-        }
         transactionQuantity--;
         bookQuantity++;
+        
+        System.out.println(response);
     }
 
 }
