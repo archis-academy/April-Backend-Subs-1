@@ -15,7 +15,7 @@ public class LibraryManagementSystem {
     private static int bookIDKeeper = 1;
     
     public static void main(String[] args) {
-    login();
+   
     }
 
 
@@ -106,7 +106,7 @@ static int login(){
     String usermail = scanner.nextLine();
     System.out.println("Password : ");
     String password = scanner.nextLine();
-    String userId = "hello";
+    String userId = "hello"; 
     boolean loginSuccessful = checkPassword(usermail, password, userId);
     scanner.close();  
     if(loginSuccessful){
@@ -422,6 +422,35 @@ static void signup(){
         transactionQuantity--;
         bookQuantity++;
     }
+
+    public static void checkOutBook(String userId, String ISBN) {
+        int userIndex = getUserIndexByUserId(userId);
+        int bookIndex = getBookIndexByISBN(ISBN);
+        String response;
+    
+        if (userIndex == -1) {
+            response = "There is no such user in the library system.";
+        } else if (bookIndex == -1) {
+            response = "This book is currently not available in the library.";
+        } else if (!checkPatronEligibilityForCheckout(userId)) {
+            response = "User is not eligible to borrow a book. Please return any overdue books.";
+        } else {
+            // Update the transaction record
+            transactions[transactionQuantity][0] = userId;
+            transactions[transactionQuantity][1] = ISBN;
+            transactions[transactionQuantity][2] = LocalDate.now().toString();
+            transactionQuantity++;
+    
+            for (int i = bookIndex; i < bookQuantity - 1; i++) {
+                books[i] = books[i + 1];
+            }
+            books[bookQuantity - 1] = null; // Listenin son elemanını null olarak ayarla
+    
+            // Reduce the book quantity
+            bookQuantity--;
+        }}    
+
+
 
 }
 
