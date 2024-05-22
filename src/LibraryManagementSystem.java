@@ -27,6 +27,12 @@ public class LibraryManagementSystem {
         }
         System.out.println(response);
     }
+    
+    // This method takes an ISBN as a parameter and returns the author of that book.
+    public static String getAuthorByISBN(String ISBN) {
+        int bookIndex = getBookIndexByISBN(ISBN);
+        return books[bookIndex][1];
+    }
 
     /*
      * This method checks whether the given author has a book in the library.
