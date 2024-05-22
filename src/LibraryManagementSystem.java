@@ -14,7 +14,41 @@ public class LibraryManagementSystem {
     public static void main(String[] args) {
 
     }
-
+    
+    /*
+     * This method is used within the addBook method.
+     * It increases the length of the books array by 1 when a book is added.
+     */
+    public static void extendBooksArrayOnAddition(String tittle, String author, String pageNumber, String ISBN) {
+    	String[][] booksClone = new String[bookQuantity + 1][4];
+    	for (int i = 0; i < bookQuantity; i++) {
+			booksClone[i][0] = books[i][0];
+			booksClone[i][1] = books[i][1];
+			booksClone[i][2] = books[i][2];
+			booksClone[i][3] = books[i][3];
+		}
+        booksClone[bookQuantity][0] = tittle;
+        booksClone[bookQuantity][1] = author;
+        booksClone[bookQuantity][2] = ISBN;
+        booksClone[bookQuantity][3] = pageNumber;
+        bookQuantity++;
+        books = booksClone;
+    }
+    
+    /*
+     * This method adds the given book to the library.
+     * If the book exists, it prints a message indicating this.
+     * Otherwise, it prints a message that the book was successfully added.
+     */
+    public static void addBook(String tittle, String author, String pageNumber) {
+        String ISBN = generateISBN();
+        String response = "This book is already available in the library.";
+        if (getBookIndexByISBN(ISBN) == -1 && !isBookExistWithAuthor(tittle, author)) {
+        	extendBooksArrayOnAddition(tittle, author, pageNumber, ISBN);
+            response = "Adding book has been completed successfully.";
+        }
+        System.out.println(response);
+    }
 
     /*
          * This method checks for the userId in the transaction array .
@@ -43,6 +77,7 @@ public class LibraryManagementSystem {
 
         }
     }
+   
     /*
        * This method checks for the userId. If it does not exist, it returns -1;
        *  if it exists, it removes the userId and returns a message to the user.
@@ -344,25 +379,6 @@ public class LibraryManagementSystem {
             }
         }
         return result;
-    }
-
-    /*
-     * This method adds the given book to the library.
-     * If the book exists, it prints a message indicating this.
-     * Otherwise, it prints a message that the book was successfully added.
-     */
-    public static void addBook(String tittle, String author, String pageNumber) {
-        String ISBN = generateISBN();
-        String response = "This book is already available in the library.";
-        if (getBookIndexByISBN(ISBN) == -1 && !isBookExistWithAuthor(tittle, author)) {
-            books[bookQuantity][0] = tittle;
-            books[bookQuantity][1] = author;
-            books[bookQuantity][2] = ISBN;
-            books[bookQuantity][3] = pageNumber;
-            bookQuantity++;
-            response = "Adding book has been completed successfully.";
-        }
-        System.out.println(response);
     }
 
     // Book Check
