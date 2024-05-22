@@ -15,10 +15,62 @@ public class LibraryManagementSystem {
     private static int bookIDKeeper = 1;
 
     public static void main(String[] args) {
-
+        
     }
 
+    /*
+         * This method checks for the userId in the transaction array .
+         * Removes the userId from the transaction array, transferring it to a new transaction array.
+     */
 
+    static void cleanTransactionsUserId(String userId){
+        int transactionCounter=0;
+        for (int i = 0; i < transactionQuantity; i++) {
+            if(transactions[i][1].equals(userId)){
+                transactionCounter ++;
+            }
+        }
+        String[][] newTransactions = new String[transactionQuantity - transactionCounter][4];
+        for (int i = 0, j = 0; i < transactionQuantity; i++, j++) {
+            if (transactions[i][0].equals(userId)) {
+                j--;
+                continue;
+            }
+            newTransactions[j][0] = transactions[i][0];
+            newTransactions[j][1] = transactions[i][1];
+            newTransactions[j][2] = transactions[i][2];
+            newTransactions[j][3] = transactions[i][3];
+
+            transactions=newTransactions;
+
+        }
+    }
+    /*
+       * This method checks for the userId. If it does not exist, it returns -1;
+       *  if it exists, it removes the userId and returns a message to the user.
+     */
+
+    static  void  deleteUserInformation(String userId){
+        int index=getUserIndexByUserId(userId);
+        if(index == -1 ){
+            System.out.println("User not found ");
+            return;
+        }
+
+        String[][] newUsers = new String[userQuantity - 1][4];
+        int newIndex= 0;
+        for (int i = 0; i < userQuantity; i++) {
+            if(i==index){
+                continue;
+            }
+            newUsers[newIndex]=users[i];
+            newIndex ++;
+        }
+        users = newUsers;
+        userQuantity -- ;
+        cleanTransactionsUserId(userId);
+        System.out.println("The user has been deleted successfully.");
+    }
     /*
      *This method checks if the book with the given ISBN is available in the library.
      * Returns the index of the book if the recommended book exists; Otherwise, it returns -1 and returns a message to the user.
