@@ -18,6 +18,28 @@ public class LibraryManagementSystem {
 
     }
 
+    // This method returns information about the book(s) borrowed by the user with the given ID.
+    public static void generateReports(String userID) {
+    	int userIndex = getUserIndexByUserId(userID);
+    	int transactionIndex = getTransactionIndexByUserId(userID);
+    	
+    	if (userIndex == -1) {
+			System.out.println("There is no such user in the library system.");
+		}
+    	else if (transactionIndex == -1) {
+			System.out.println("This user has not borrowed any books.");
+		}
+    	else {
+    		System.out.println("Information about the book(s) you have borrowed:");
+			for (int i = 0; i < transactionQuantity; i++) {
+				if (transactions[i][0].equals(userID)) {
+					System.out.println("The ID of the borrowed book: " + transactions[i][1]);
+					System.out.println("The date the book was borrowed: " + transactions[i][2]);
+					System.out.println("The return deadline of the book: " + checkBookReturnDeadlineByDate(transactions[i][2]) + "\n");
+				}
+			}
+		}
+    }
 
     /*
      *This method checks if the book with the given ISBN is available in the library.
@@ -204,12 +226,17 @@ public class LibraryManagementSystem {
     }
 
     /*
-     * This method returns the return deadline of the book borrowed by the specified user. (15 days)
+     * This method returns the return deadline of the first book borrowed by the specified user. (15 days)
      */
     public static String checkBookReturnDeadline(String userId) {
         int transactionIndex = getTransactionIndexByUserId(userId);
         String date = transactions[transactionIndex][2];
         return LocalDate.parse(date).plusDays(15).toString();
+    }
+    
+    // This method returns the return deadline of a book borrowed on the given date. (15 days)
+    public static String checkBookReturnDeadlineByDate(String date) {
+    	return LocalDate.parse(date).plusDays(15).toString();
     }
 
     /*
