@@ -15,7 +15,7 @@ public class LibraryManagementSystem {
     private static int bookIDKeeper = 1;
 
     public static void main(String[] args) {
-        
+
     }
 
     /*
@@ -23,7 +23,7 @@ public class LibraryManagementSystem {
          * Removes the userId from the transaction array, transferring it to a new transaction array.
      */
 
-    static void cleanTransactionsUserId(String userId){
+   public  static void cleanTransactionsUserId(String userId){
         int transactionCounter=0;
         for (int i = 0; i < transactionQuantity; i++) {
             if(transactions[i][1].equals(userId)){
@@ -50,7 +50,7 @@ public class LibraryManagementSystem {
        *  if it exists, it removes the userId and returns a message to the user.
      */
 
-    static  void  deleteUserInformation(String userId){
+        public   static  void  deleteUserInformation(String userId){
         int index=getUserIndexByUserId(userId);
         if(index == -1 ){
             System.out.println("User not found ");
@@ -75,7 +75,7 @@ public class LibraryManagementSystem {
      *This method checks if the book with the given ISBN is available in the library.
      * Returns the index of the book if the recommended book exists; Otherwise, it returns -1 and returns a message to the user.
      */
-    public static void requestBook(String tittle, String author) {
+     public static void requestBook(String tittle, String author) {
         boolean result = isBookExistWithAuthor(tittle, author);
         String response = "Book procurement process is starting";
         if (result) {
