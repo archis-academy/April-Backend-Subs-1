@@ -12,8 +12,46 @@ public class LibraryManagementSystem {
     private static int bookIDKeeper = 1;
 
     public static void main(String[] args) {
+    	
     }
 
+    /*
+     * This method reports the total number of books and their details.
+     * Additionally, if the given user has borrowed a book, it reports the return deadline and details.
+     */
+    public static void generateReports(String userID) {
+    	int userIndex = getUserIndexByUserId(userID);
+    	int transactionIndex = getTransactionIndexByUserId(userID);
+    	
+    	if (userIndex == -1) {
+			System.out.println("There is no such user in the library system.");
+		}
+    	else if (transactionIndex == -1) {
+    		countTotalBooks();
+    		printAllBooks();
+			System.out.println("There is no due return deadline to display because the user has not borrowed any books.");
+		}
+    	else {
+    		countTotalBooks();
+    		printAllBooks();
+    		System.out.println("Information about the book(s) you have borrowed:");
+			for (int i = 0; i < transactionQuantity; i++) {
+				if (transactions[i][0].equals(userID)) {
+					System.out.println("The ID of the borrowed book: " + transactions[i][1]);
+					System.out.println("The date the book was borrowed: " + transactions[i][2]);
+					System.out.println("The return deadline of the book: " + checkBookReturnDeadlineByDate(transactions[i][2]) + "\n");
+				}
+			}
+		}
+    }
+    
+    // This method is responsible for printing the books details (all).
+    public static void printAllBooks() {
+    	for (int i = 0; i < bookQuantity; i++) {
+			printBooks(books[i][0], books[i][1], books[i][2], books[i][3]);
+		}
+    }
+    
     /*
      * This method is used within the addBook method.
      * It increases the length of the books array by 1 when a book is added.
@@ -53,8 +91,7 @@ public class LibraryManagementSystem {
      * This method checks for the userId in the transaction array .
      * Removes the userId from the transaction array, transferring it to a new transaction array.
      */
-
-    public static void cleanTransactionsUserId(String userId) { //todo: this method is nor working as expected
+    public static void cleanTransactionsUserId(String userId) {
         int transactionCounter = 0;
         for (int i = 0; i < transactionQuantity; i++) {
             if (transactions[i][0].equals(userId)) {
@@ -71,17 +108,15 @@ public class LibraryManagementSystem {
             newTransactions[j][1] = transactions[i][1];
             newTransactions[j][2] = transactions[i][2];
             newTransactions[j][3] = transactions[i][3];
-
-            transactions = newTransactions;
-
         }
+        
+        transactions = newTransactions;
     }
 
     /*
      * This method checks for the userId. If it does not exist, it returns -1;
      *  if it exists, it removes the userId and returns a message to the user.
      */
-
     public static void deleteUserInformation(String userId) {
         int index = getUserIndexByUserId(userId);
         if (index == -1) {
@@ -288,12 +323,17 @@ public class LibraryManagementSystem {
     }
 
     /*
-     * This method returns the return deadline of the book borrowed by the specified user. (15 days)
+     * This method returns the return deadline of the first book borrowed by the specified user. (15 days)
      */
     public static String checkBookReturnDeadline(String userId) {
         int transactionIndex = getTransactionIndexByUserId(userId);
         String date = transactions[transactionIndex][2];
         return LocalDate.parse(date).plusDays(15).toString();
+    }
+    
+    // This method returns the return deadline of a book borrowed on the given date. (15 days)
+    public static String checkBookReturnDeadlineByDate(String date) {
+    	return LocalDate.parse(date).plusDays(15).toString();
     }
 
     /*
@@ -335,6 +375,7 @@ public class LibraryManagementSystem {
         System.out.println("Author: " + author);
         System.out.println("ISBN: " + ISBN);
         System.out.println("Page Number: " + pageNumber);
+        System.out.println();
     }
 
     /*
@@ -393,8 +434,8 @@ public class LibraryManagementSystem {
     }
 
     /*
-     *"If a book is unavailable, it is checked whether it exists or not."
-     * "If the book exists, it runs the code to display the existing book."
+     * If a book is unavailable, it is checked whether it exists or not.
+     * If the book exists, it runs the code to display the existing book.
      */
     public static void viewAvailableBooks() {
         boolean isEmpty = bookQuantity != 0;
@@ -410,7 +451,7 @@ public class LibraryManagementSystem {
 
     // CountTotalBook
     public static void countTotalBooks() {
-        System.out.println("Total number of the books: " + bookQuantity);
+        System.out.println("Total number of the books: " + bookQuantity + "\n");
     }
 
     /*
@@ -455,5 +496,3 @@ public class LibraryManagementSystem {
     }
 
 }
-
-
