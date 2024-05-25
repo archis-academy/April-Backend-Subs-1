@@ -12,11 +12,68 @@ public class LibraryManagementSystem {
     private static int bookIDKeeper = 1;
 
     public static void main(String[] args) {
-
+    	
     }
 
+    /*
+     * This method reports the total number of books and their details.
+     * Additionally, if the given user has borrowed a book, it reports the return deadline and details.
+     */
+    public static void generateReports(String userID) {
+    	int userIndex = getUserIndexByUserId(userID);
+    	int transactionIndex = getTransactionIndexByUserId(userID);
+    	
+    	if (userIndex == -1) {
+			System.out.println("There is no such user in the library system.");
+		}
+    	else if (transactionIndex == -1) {
+    		countTotalBooks();
+    		printAllBooks();
+			System.out.println("There is no due return deadline to display because the user has not borrowed any books.");
+		}
+    	else {
+    		countTotalBooks();
+    		printAllBooks();
+    		System.out.println("Information about the book(s) you have borrowed:");
+			for (int i = 0; i < transactionQuantity; i++) {
+				if (transactions[i][0].equals(userID)) {
+					System.out.println("The ID of the borrowed book: " + transactions[i][1]);
+					System.out.println("The date the book was borrowed: " + transactions[i][2]);
+					System.out.println("The return deadline of the book: " + checkBookReturnDeadlineByDate(transactions[i][2]) + "\n");
+				}
+			}
+		}
+    }
+    
+    // This method is responsible for printing the books details (all).
+    public static void printAllBooks() {
+    	for (int i = 0; i < bookQuantity; i++) {
+			printBooks(books[i][0], books[i][1], books[i][2], books[i][3]);
+		}
+    }
+    
+    /*
+     * This method is used within the addBook method.
+     * It increases the length of the books array by 1 when a book is added.
+     */
+    public static void extendBooksArrayOnAddition(String tittle, String author, String pageNumber, String ISBN) {
+        String[][] booksClone = new String[bookQuantity + 1][4];
+        for (int i = 0; i < bookQuantity; i++) {
+            booksClone[i][0] = books[i][0];
+            booksClone[i][1] = books[i][1];
+            booksClone[i][2] = books[i][2];
+            booksClone[i][3] = books[i][3];
+        }
+        booksClone[bookQuantity][0] = tittle;
+        booksClone[bookQuantity][1] = author;
+        booksClone[bookQuantity][2] = ISBN;
+        booksClone[bookQuantity][3] = pageNumber;
+        bookQuantity++;
+        books = booksClone;
+    }
 
     /*
+
 
      *This method returns the index of the book that matches the given book title and author.
      * If there is no such book, it returns -1.
@@ -72,13 +129,31 @@ public class LibraryManagementSystem {
 
          * This method checks for the userId in the transaction array .
          * Removes the userId from the transaction array, transferring it to a new transaction array.
-     */
 
-   public  static void cleanTransactionsUserId(String userId){
-        int transactionCounter=0;
+     * This method adds the given book to the library.
+     * If the book exists, it prints a message indicating this.
+     * Otherwise, it prints a message that the book was successfully added.
+
+     */
+    public static void addBook(String tittle, String author, String pageNumber) {
+        String ISBN = generateISBN();
+        String response = "This book is already available in the library.";
+        if (getBookIndexByISBN(ISBN) == -1 && !isBookExistWithAuthor(tittle, author)) {
+            extendBooksArrayOnAddition(tittle, author, pageNumber, ISBN);
+            response = "Adding book has been completed successfully.";
+        }
+        System.out.println(response);
+    }
+
+    /*
+     * This method checks for the userId in the transaction array .
+     * Removes the userId from the transaction array, transferring it to a new transaction array.
+     */
+    public static void cleanTransactionsUserId(String userId) {
+        int transactionCounter = 0;
         for (int i = 0; i < transactionQuantity; i++) {
-            if(transactions[i][1].equals(userId)){
-                transactionCounter ++;
+            if (transactions[i][0].equals(userId)) {
+                transactionCounter++;
             }
         }
         String[][] newTransactions = new String[transactionQuantity - transactionCounter][4];
@@ -91,34 +166,33 @@ public class LibraryManagementSystem {
             newTransactions[j][1] = transactions[i][1];
             newTransactions[j][2] = transactions[i][2];
             newTransactions[j][3] = transactions[i][3];
-
-            transactions=newTransactions;
-
         }
+        
+        transactions = newTransactions;
     }
-    /*
-       * This method checks for the userId. If it does not exist, it returns -1;
-       *  if it exists, it removes the userId and returns a message to the user.
-     */
 
-        public   static  void  deleteUserInformation(String userId){
-        int index=getUserIndexByUserId(userId);
-        if(index == -1 ){
+    /*
+     * This method checks for the userId. If it does not exist, it returns -1;
+     *  if it exists, it removes the userId and returns a message to the user.
+     */
+    public static void deleteUserInformation(String userId) {
+        int index = getUserIndexByUserId(userId);
+        if (index == -1) {
             System.out.println("User not found ");
             return;
         }
 
         String[][] newUsers = new String[userQuantity - 1][4];
-        int newIndex= 0;
+        int newIndex = 0;
         for (int i = 0; i < userQuantity; i++) {
-            if(i==index){
+            if (i == index) {
                 continue;
             }
-            newUsers[newIndex]=users[i];
-            newIndex ++;
+            newUsers[newIndex] = users[i];
+            newIndex++;
         }
         users = newUsers;
-        userQuantity -- ;
+        userQuantity--;
         cleanTransactionsUserId(userId);
         System.out.println("The user has been deleted successfully.");
     }
@@ -128,7 +202,7 @@ public class LibraryManagementSystem {
      *This method checks if the book with the given ISBN is available in the library.
      * Returns the index of the book if the recommended book exists; Otherwise, it returns -1 and returns a message to the user.
      */
-     public static void requestBook(String tittle, String author) {
+    public static void requestBook(String tittle, String author) {
         boolean result = isBookExistWithAuthor(tittle, author);
         String response = "Book procurement process is starting";
         if (result) {
@@ -136,7 +210,7 @@ public class LibraryManagementSystem {
         }
         System.out.println(response);
     }
-    
+
     // This method takes an ISBN as a parameter and returns the author of that book.
     public static String getAuthorByISBN(String ISBN) {
         int bookIndex = getBookIndexByISBN(ISBN);
@@ -308,12 +382,17 @@ public class LibraryManagementSystem {
     }
 
     /*
-     * This method returns the return deadline of the book borrowed by the specified user. (15 days)
+     * This method returns the return deadline of the first book borrowed by the specified user. (15 days)
      */
     public static String checkBookReturnDeadline(String userId) {
         int transactionIndex = getTransactionIndexByUserId(userId);
         String date = transactions[transactionIndex][2];
         return LocalDate.parse(date).plusDays(15).toString();
+    }
+    
+    // This method returns the return deadline of a book borrowed on the given date. (15 days)
+    public static String checkBookReturnDeadlineByDate(String date) {
+    	return LocalDate.parse(date).plusDays(15).toString();
     }
 
     /*
@@ -355,6 +434,7 @@ public class LibraryManagementSystem {
         System.out.println("Author: " + author);
         System.out.println("ISBN: " + ISBN);
         System.out.println("Page Number: " + pageNumber);
+        System.out.println();
     }
 
     /*
@@ -400,25 +480,6 @@ public class LibraryManagementSystem {
         return result;
     }
 
-    /*
-     * This method adds the given book to the library.
-     * If the book exists, it prints a message indicating this.
-     * Otherwise, it prints a message that the book was successfully added.
-     */
-    public static void addBook(String tittle, String author, String pageNumber) {
-        String ISBN = generateISBN();
-        String response = "This book is already available in the library.";
-        if (getBookIndexByISBN(ISBN) == -1 && !isBookExistWithAuthor(tittle, author)) {
-            books[bookQuantity][0] = tittle;
-            books[bookQuantity][1] = author;
-            books[bookQuantity][2] = ISBN;
-            books[bookQuantity][3] = pageNumber;
-            bookQuantity++;
-            response = "Adding book has been completed successfully.";
-        }
-        System.out.println(response);
-    }
-
     // Book Check
     public static boolean checkBook(String ISBN) {
         boolean response = false;
@@ -432,8 +493,8 @@ public class LibraryManagementSystem {
     }
 
     /*
-     *"If a book is unavailable, it is checked whether it exists or not."
-     * "If the book exists, it runs the code to display the existing book."
+     * If a book is unavailable, it is checked whether it exists or not.
+     * If the book exists, it runs the code to display the existing book.
      */
     public static void viewAvailableBooks() {
         boolean isEmpty = bookQuantity != 0;
@@ -449,7 +510,7 @@ public class LibraryManagementSystem {
 
     // CountTotalBook
     public static void countTotalBooks() {
-        System.out.println("Total number of the books: " + bookQuantity);
+        System.out.println("Total number of the books: " + bookQuantity + "\n");
     }
 
     /*
@@ -460,20 +521,20 @@ public class LibraryManagementSystem {
         int transactionIndex = getTransactionIndexByUserId(userID);
         String returnDeadline = checkBookReturnDeadline(userID);
         String response = null;
-        
+
         if (transactionIndex != -1 && LocalDate.parse(returnDeadline).isBefore(LocalDate.now())) {
-        	response = "The book was returned late.\nBook returned successfully.";
+            response = "The book was returned late.\nBook returned successfully.";
         } else if (transactionIndex != -1) {
-        	response = "Book returned successfully.";
+            response = "Book returned successfully.";
         } else {
-        	System.out.println("This book has already been returned");
-        	return;
+            System.out.println("This book has already been returned");
+            return;
         }
 
         String[][] transactionClone = new String[transactionQuantity - 1][4];
         for (int i = 0, j = 0; i < transactionQuantity; i++, j++) {
             if (transactions[i][0].equals(userID) && transactions[i][1].equals(ISBN)) {
-            	j--;
+                j--;
                 continue;
             }
             transactionClone[j][0] = transactions[i][0];
@@ -481,7 +542,7 @@ public class LibraryManagementSystem {
             transactionClone[j][2] = transactions[i][2];
             transactionClone[j][3] = transactions[i][3];
         }
-        
+
         transactions = transactionClone;
         books[bookQuantity][0] = tittle;
         books[bookQuantity][1] = author;
@@ -489,10 +550,8 @@ public class LibraryManagementSystem {
         books[bookQuantity][3] = pageNumber;
         transactionQuantity--;
         bookQuantity++;
-        
+
         System.out.println(response);
     }
 
 }
-
-
