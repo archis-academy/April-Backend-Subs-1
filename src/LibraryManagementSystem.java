@@ -40,10 +40,9 @@ public class LibraryManagementSystem {
             newTransactions[j][1] = transactions[i][1];
             newTransactions[j][2] = transactions[i][2];
             newTransactions[j][3] = transactions[i][3];
-
-            transactions=newTransactions;
-
         }
+       transactions=newTransactions;
+
     }
     /*
        * This method checks for the userId. If it does not exist, it returns -1;
