@@ -141,9 +141,67 @@ public class LibraryManagementSystem {
     }
 
     /*
+
+
+     *This method returns the index of the book that matches the given book title and author.
+     * If there is no such book, it returns -1.
+     */
+    public static int getBookIndexByTittleAndAuthor(String tittle, String author) {
+        int bookIndex = -1;
+        for (int i = 0; i < bookQuantity; i++) {
+            if (books[i][0].equals(tittle) && books[i][1].equals(author)) {
+                bookIndex = i;
+                break;
+            }
+        }
+        return bookIndex;
+    }
+
+    /*
+     * This method creates a new array without the book to be deleted.
+     *Then it assigns this new array to the 'books' array, effectively removing the book and reducing the size of the array.
+     */
+    public static void truncateBooksArrayDeletion(String tittle, String author) {
+        int bookIndex = getBookIndexByTittleAndAuthor(tittle, author);
+        String[][] booksClone = new String[bookQuantity - 1][4];
+        for (int i = 0; i < bookQuantity; i++) {
+            if (bookIndex == i) {
+                continue;
+            }
+            booksClone[i][0] = books[i][0];
+            booksClone[i][1] = books[i][1];
+            booksClone[i][2] = books[i][2];
+            booksClone[i][3] = books[i][3];
+        }
+        books = booksClone;
+
+    }
+
+    /*
+     *This method checks if the given book title and author are present in the library.
+     * If they exist, it deletes the book and notifies the user with a message.
+     */
+    public static void deleteBook(String tittle, String author) {
+        int index = getBookIndexByTittleAndAuthor(tittle, author);
+        String response;
+        if (index == -1) {
+            response = "There is not book in library.";
+        } else {
+            truncateBooksArrayDeletion(tittle, author);
+            response = "The book has been successfully deleted .";
+        }
+        System.out.println(response);
+    }
+
+
+
+         * This method checks for the userId in the transaction array .
+         * Removes the userId from the transaction array, transferring it to a new transaction array.
+
      * This method adds the given book to the library.
      * If the book exists, it prints a message indicating this.
      * Otherwise, it prints a message that the book was successfully added.
+
      */
     public static void addBook(String tittle, String author, String pageNumber) {
         String ISBN = generateISBN();
@@ -206,6 +264,7 @@ public class LibraryManagementSystem {
         cleanTransactionsUserId(userId);
         System.out.println("The user has been deleted successfully.");
     }
+
 
     /*
      *This method checks if the book with the given ISBN is available in the library.
