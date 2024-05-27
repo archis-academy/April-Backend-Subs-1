@@ -14,6 +14,74 @@ public class LibraryManagementSystem {
     public static void main(String[] args) {
     	
     }
+    
+    /*
+     * This method returns the ISBN of the book with the given title and author;
+     * if the book is not available, it returns the string '-1.'
+     */
+    public static String getISBNByBookAndAuthorName(String bookName, String authorName) {
+    	String ISBN = "-1";
+    	for (int i = 0; i < bookQuantity; i++) {
+			if (books[i][0].equals(bookName) && books[i][1].equals(authorName)) {
+				ISBN = books[i][2];
+			}
+		}
+    	return ISBN;
+    }
+    
+    /*
+     * This method allows the user to borrow a book and prints the appropriate message.
+     * It also prints the appropriate message if the user or book does not exist or if the user is not eligible to borrow a book.
+     */
+    public static void checkOutBook(String userID, String bookName, String authorName) {
+    	int userIndex = getUserIndexByUserId(userID);
+    	String ISBN = getISBNByBookAndAuthorName(bookName, authorName);
+    	int bookIndex = getBookIndexByISBN(ISBN);
+    	String response = null;
+    	
+    	if (userIndex == -1) {
+			response = "There is no such user in the library system.";
+		}
+    	else if (bookIndex == -1) {
+			response = "This book is currently not available in the library.";
+		}
+    	else if (!checkPatronEligibilityForCheckout(userID)) {
+    		response = "User is not eligible to borrow a book. Please return any overdue books.";
+		}
+    	else {
+    		String[][] transactionsClone = new String[transactionQuantity + 1][4];
+			for (int i = 0; i < transactionQuantity; i++) {
+				transactionsClone[i][0] = transactions[i][0];
+				transactionsClone[i][1] = transactions[i][1];
+				transactionsClone[i][2] = transactions[i][2];
+				transactionsClone[i][3] = transactions[i][3];
+			}
+			
+    		transactionsClone[transactionQuantity][0] = userID;
+    		transactionsClone[transactionQuantity][1] = ISBN;
+    		transactionsClone[transactionQuantity][2] = LocalDate.now().toString();
+    		transactionsClone[transactionQuantity][3] = authorName;
+    		transactions = transactionsClone;
+			transactionQuantity++;
+			
+			String[][] booksClone = new String[bookQuantity - 1][4];
+			for (int i = 0, j = 0; i < bookQuantity; i++, j++) {
+				if (books[i][2].equals(ISBN)) {
+					j--;
+					continue;
+				}
+				booksClone[j][0] = books[i][0];
+				booksClone[j][1] = books[i][1];
+				booksClone[j][2] = books[i][2];
+				booksClone[j][3] = books[i][3];
+			}
+			books = booksClone;
+			bookQuantity--;
+			
+			response = "The book borrowing was successfully completed.";
+		}
+    	System.out.println(response);
+    }
 
     /*
      * This method reports the total number of books and their details.
@@ -296,9 +364,9 @@ public class LibraryManagementSystem {
     public static boolean checkPatronEligibilityForCheckout(String userId) {
         boolean eligibility = true;
         int transactionIndex = getTransactionIndexByUserId(userId);
-        String returnDeadline = checkBookReturnDeadline(userId);
 
         if (transactionIndex != -1) {
+        	String returnDeadline = checkBookReturnDeadline(userId);
             if (LocalDate.parse(returnDeadline).isBefore(LocalDate.now())) {
                 eligibility = false;
             }
