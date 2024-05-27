@@ -12,7 +12,8 @@ public class LibraryManagementSystem {
     private static int bookIDKeeper = 1;
 
     public static void main(String[] args) {
-    	
+    	signUp("Emine", "61", "aycakul@outlook.com", "6161");
+    	login("aycakul@outlook.com", "6161");
     }
     
     /*
@@ -79,6 +80,7 @@ public class LibraryManagementSystem {
 			usersClone[userQuantity][1] = ID;
 			usersClone[userQuantity][2] = email;
 			usersClone[userQuantity][3] = password;
+			userQuantity++;
 			users = usersClone;
 			response = "Successfully registered.";
 		}
