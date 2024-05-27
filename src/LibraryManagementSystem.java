@@ -16,6 +16,76 @@ public class LibraryManagementSystem {
     }
     
     /*
+     * This method checks if the given email exists in the users array.
+     * If it does, it returns the index of the user to which this email belongs.
+     * If not, it returns -1.
+     */
+    public static int getUserIndexByEmail(String email) {
+    	int userIndex = -1;
+    	for (int i = 0; i < userQuantity; i++) {
+			if (users[i][2].equals(email)) {
+				userIndex = i;
+			}
+		}
+    	return userIndex;
+    }
+    
+    /*
+     * This method checks whether the data received from the user is suitable for logging in, returning a boolean value.
+     * True if successful, false otherwise.
+     * It prints appropriate messages according to the scenarios.
+     */
+    public static boolean login(String email, String password) {
+    	int userIndex = getUserIndexByEmail(email);
+    	String response = null;
+    	boolean result = false;
+    	
+    	if (userIndex != -1) {
+			if (checkPassword(email, password)) {
+				response = "Successfully logged in.";
+				result = true;
+			}
+			else {
+				response = "Incorrect password. Please try again.";
+			}
+		}
+    	
+    	else {
+    		response = "Login failed. Such a user could not be found.";
+		}
+    	System.out.println(response);
+    	return result;
+    }
+    
+    /*
+     * This method first checks if a user with the given email already exists in the system.
+     * Then, if it does not exist, it registers the user into the system (adds to the users array).
+     * It prints appropriate messages according to the scenarios.
+     */
+    public static void signUp(String fullName, String ID, String email, String password) {
+    	String response = null;
+    	if (getUserIndexByEmail(email) != -1) {
+			response = "A user with this email is already registered in the system. Please log in.";
+		}
+    	else {
+			String[][] usersClone = new String[userQuantity + 1][4];
+			for (int i = 0; i < userQuantity; i++) {
+				usersClone[i][0] = users[i][0];
+				usersClone[i][1] = users[i][1];
+				usersClone[i][2] = users[i][2];
+				usersClone[i][3] = users[i][3];
+			}
+			usersClone[userQuantity][0] = fullName;
+			usersClone[userQuantity][1] = ID;
+			usersClone[userQuantity][2] = email;
+			usersClone[userQuantity][3] = password;
+			users = usersClone;
+			response = "Successfully registered.";
+		}
+    	System.out.println(response);
+    }
+    
+    /*
      * This method returns the ISBN of the book with the given title and author;
      * if the book is not available, it returns the string '-1.'
      */
@@ -141,8 +211,6 @@ public class LibraryManagementSystem {
     }
 
     /*
-
-
      *This method returns the index of the book that matches the given book title and author.
      * If there is no such book, it returns -1.
      */
@@ -174,7 +242,6 @@ public class LibraryManagementSystem {
             booksClone[i][3] = books[i][3];
         }
         books = booksClone;
-
     }
 
     /*
@@ -193,15 +260,10 @@ public class LibraryManagementSystem {
         System.out.println(response);
     }
 
-
-
-         * This method checks for the userId in the transaction array .
-         * Removes the userId from the transaction array, transferring it to a new transaction array.
-
+    /*
      * This method adds the given book to the library.
      * If the book exists, it prints a message indicating this.
      * Otherwise, it prints a message that the book was successfully added.
-
      */
     public static void addBook(String tittle, String author, String pageNumber) {
         String ISBN = generateISBN();
@@ -217,7 +279,7 @@ public class LibraryManagementSystem {
      * This method checks for the userId in the transaction array .
      * Removes the userId from the transaction array, transferring it to a new transaction array.
      */
-    public static void cleanTransactionsUserId(String userId) {
+    public static void cleanTransactionsByUserId(String userId) {
         int transactionCounter = 0;
         for (int i = 0; i < transactionQuantity; i++) {
             if (transactions[i][0].equals(userId)) {
@@ -256,15 +318,17 @@ public class LibraryManagementSystem {
             if (i == index) {
                 continue;
             }
-            newUsers[newIndex] = users[i];
+            newUsers[newIndex][0] = users[i][0];
+            newUsers[newIndex][1] = users[i][1];
+            newUsers[newIndex][2] = users[i][2];
+            newUsers[newIndex][3] = users[i][3];
             newIndex++;
         }
         users = newUsers;
         userQuantity--;
-        cleanTransactionsUserId(userId);
+        cleanTransactionsByUserId(userId);
         System.out.println("The user has been deleted successfully.");
     }
-
 
     /*
      *This method checks if the book with the given ISBN is available in the library.
@@ -363,14 +427,14 @@ public class LibraryManagementSystem {
      *This method takes a  value as a parameter (email, password or userIndex)
      *It checks whether there is any invalid entry.
      */
-    public static boolean checkPassword(String email, String password, String userId) {
-        int userIndex = getUserIndexByUserId(userId);
+    public static boolean checkPassword(String email, String password) {
+        int userIndex = getUserIndexByEmail(email);
         return users[userIndex][2].equals(email) && users[userIndex][3].equals(password);
     }
 
-    public static void printCheckPassword(String email, String password, String userId) {
+    public static void printCheckPassword(String email, String password) {
         String response = "Login Successful";
-        boolean result = checkPassword(email, password, userId);
+        boolean result = checkPassword(email, password);
         if (!result) {
             response = "Login Failed please check your password or email.";
         }
@@ -430,7 +494,6 @@ public class LibraryManagementSystem {
                 eligibility = false;
             }
         }
-
         return eligibility;
     }
 
