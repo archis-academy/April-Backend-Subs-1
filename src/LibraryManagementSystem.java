@@ -12,8 +12,7 @@ public class LibraryManagementSystem {
     private static int bookIDKeeper = 1;
 
     public static void main(String[] args) {
-    	signUp("Emine", "61", "aycakul@outlook.com", "6161");
-    	login("aycakul@outlook.com", "6161");
+    	
     }
     
     /*
