@@ -94,7 +94,7 @@ public class LibraryManagementSystem {
     
     public static void userMenu(Scanner input, String userID) {
     	int choice;
-    	String tittle, author, isbn, pageNumber, anything, email, password;
+    	String tittle, author, isbn, pageNumber, anything, newEmail, newPassword;
     	
     	do {
         	printUserMenu();
@@ -212,10 +212,10 @@ public class LibraryManagementSystem {
     		case 13:
     			System.out.println("New email: ");
     			input.nextLine();
-    			email = input.nextLine();
+    			newEmail = input.nextLine();
     			System.out.println("New password: ");
-    			password = input.nextLine();
-    			updateUserInfo(userID, email, password);
+    			newPassword = input.nextLine();
+    			updateUserInfo(userID, newEmail, newPassword);
     			break;
     			
     		case 14:
