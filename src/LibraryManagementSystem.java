@@ -1,18 +1,306 @@
 import java.time.LocalDate;
+import java.util.Scanner;
 
 public class LibraryManagementSystem {
 
     private static final int INDEX = 100;
-    private static String[][] books = new String[INDEX][4]; // [BookName,AuthorName,ISBN,pageNumber]
-    private static String[][] users = new String[INDEX][4]; // [FullName,ID,Email,Password]
-    private static String[][] transactions = new String[INDEX][4]; // [userId,bookId,date,authorName]
+    private static String[][] books = new String[INDEX][4]; // [tittle, author, isbn, pageNumber]
+    private static String[][] users = new String[INDEX][4]; // [fullName, id, email, password]
+    private static String[][] transactions = new String[INDEX][4]; // [userId, bookId, date, author]
     private static int bookQuantity = 0;
     private static int userQuantity = 0;
     private static int transactionQuantity = 0;
     private static int bookIDKeeper = 1;
+    public static Scanner input = new Scanner(System.in);
 
     public static void main(String[] args) {
+    	userHints(input);
+    }
+    
+    public static void userHints(Scanner input) {
+    	int choice;
+    	String name, id, email, password;
+    	System.out.println("Welcome to the library system!");
     	
+    	do {
+    		System.out.println("1-) Sign Up\n2-) Log In\n3-) Exit\nPlease choose your transaction: ");
+    		choice = input.nextInt();
+    		
+    		while (choice != 1 && choice != 2 && choice != 3) {
+				System.out.println("Please enter a valid value (1, 2 or 3): ");
+				choice = input.nextInt();
+			}
+    		
+    		switch (choice) {
+			case 1:
+				System.out.println("Name: ");
+				input.nextLine();
+				name = input.nextLine();
+				System.out.println("ID: ");
+				id = input.nextLine();
+				System.out.println("Email: ");
+				email = input.nextLine();
+				System.out.println("Password: ");
+				password = input.nextLine();
+				signUp(name, id, email, password);
+				break;
+
+			case 2:
+				System.out.println("Email: ");
+				input.nextLine();
+				email = input.nextLine();
+				System.out.println("Password: ");
+				password = input.nextLine();
+				boolean loggedIn = login(email, password);
+				if (loggedIn) {
+					int userIndex = getUserIndexByEmail(email);
+					userMenu(input, users[userIndex][1]);
+				}
+				else {
+					userHints(input); // If the user cannot log in, the method calls itself again to display the login menu (recursive).
+				}
+				break;
+				
+			case 3:
+				System.out.println("Logging out of the library system...");
+				System.exit(0);
+				break;
+			}
+		} while (choice != 2);
+    }
+    
+    public static void printUserMenu() {
+    	System.out.println("------------");
+    	System.out.println(" USER MENU: ");
+    	System.out.println("------------");
+    	
+    	System.out.println("1-) Add Book");
+    	System.out.println("2-) Borrow Book");
+    	System.out.println("3-) Return Book");
+    	System.out.println("4-) View Available Books");
+    	System.out.println("5-) Update Book");
+    	System.out.println("6-) Delete Book");
+    	System.out.println("7-) Search Book");
+    	System.out.println("8-) Request Book");
+    	System.out.println("9-) Reserve Book");
+    	System.out.println("10-) Generate Reports");
+    	System.out.println("11-) Book Recommendation");
+    	System.out.println("12-) Eligibility for Borrow Book");
+    	System.out.println("13-) Update User");
+    	System.out.println("14-) Delete User");
+    	System.out.println("15-) Exit");
+    	System.out.println("Please choose your transaction: ");
+    }
+    
+    public static void userMenu(Scanner input, String userID) {
+    	int choice;
+    	String tittle, author, isbn, pageNumber, anything, newEmail, newPassword;
+    	
+    	do {
+        	printUserMenu();
+        	choice = input.nextInt();
+        	
+        	while (choice < 1 || choice > 15) {
+            	System.out.println("Invalid value. Please try again: ");
+            	printUserMenu();
+            	choice = input.nextInt();
+			}
+        	
+        	switch (choice) {
+    		case 1:
+    			System.out.println("Tittle: ");
+    			input.nextLine();
+    			tittle = input.nextLine();
+    			System.out.println("Author: ");
+    			author = input.nextLine();
+    			System.out.println("Page Number: ");
+    			pageNumber = input.nextLine();
+    			addBook(tittle, author, pageNumber);
+    			break;
+
+    		case 2:
+    			System.out.println("Tittle: ");
+    			input.nextLine();
+    			tittle = input.nextLine();
+    			System.out.println("Author: ");
+    			author = input.nextLine();
+    			checkOutBook(userID, tittle, author);
+    			break;
+    			
+    		case 3:
+    			System.out.println("Tittle: ");
+    			input.nextLine();
+    			tittle = input.nextLine();
+    			System.out.println("Author: ");
+    			author = input.nextLine();
+    			System.out.println("ISBN: ");
+    			isbn = input.nextLine();
+    			System.out.println("Page Number: ");
+    			pageNumber = input.nextLine();
+    			returnBook(userID, tittle, author, isbn, pageNumber);
+    			break;
+    			
+    		case 4:
+    			countTotalBooks();
+    			viewAvailableBooks();
+    			break;
+    			
+    		case 5:
+    			System.out.println("Tittle: ");
+    			input.nextLine();
+    			tittle = input.nextLine();
+    			System.out.println("Author: ");
+    			author = input.nextLine();
+    			System.out.println("ISBN: ");
+    			isbn = input.nextLine();
+    			System.out.println("Page Number: ");
+    			pageNumber = input.nextLine();
+    			updateBook(isbn, tittle, author, pageNumber);
+    			break;
+    			
+    		case 6:
+    			System.out.println("Tittle: ");
+    			input.nextLine();
+    			tittle = input.nextLine();
+    			System.out.println("Author: ");
+    			author = input.nextLine();
+    			deleteBook(tittle, author);
+    			break;
+    			
+    		case 7:
+    			System.out.println("Tittle, author or ISBN: ");
+    			input.nextLine();
+    			anything = input.nextLine();
+    			searchBooks(anything);
+    			break;
+    			
+    		case 8:
+    			System.out.println("Tittle: ");
+    			input.nextLine();
+    			tittle = input.nextLine();
+    			System.out.println("Author: ");
+    			author = input.nextLine();
+    			requestBook(tittle, author);
+    			break;
+    			
+    		case 9:
+    			System.out.println("Tittle: ");
+    			input.nextLine();
+    			tittle = input.nextLine();
+    			System.out.println("Author: ");
+    			author = input.nextLine();
+    			reserveBook(tittle, author);
+    			break;
+    			
+    		case 10:
+    			generateReports(userID);
+    			break;
+    			
+    		case 11:
+    			generateBookRecommendations(userID);
+    			break;
+    			
+    		case 12:
+    			if (checkPatronEligibilityForCheckout(userID)) {
+    				System.out.println("You are eligible to borrow books.");
+    			}
+    			else {
+    				System.out.println("You are not eligible to borrow books.");
+    			}
+    			break;
+    			
+    		case 13:
+    			System.out.println("New email: ");
+    			input.nextLine();
+    			newEmail = input.nextLine();
+    			System.out.println("New password: ");
+    			newPassword = input.nextLine();
+    			updateUserInfo(userID, newEmail, newPassword);
+    			break;
+    			
+    		case 14:
+    			System.out.println("Deleting user information...");
+    			deleteUserInformation(userID);
+    			userHints(input); // After the user is deleted, it displays the login menu again.
+    			break;
+    			
+    		case 15:
+    			System.out.println("Logging out of the library system...");
+    			System.exit(0);
+    			break;
+    		}
+		} while (choice != 14);
+    }
+    
+    /*
+     * This method checks if the given email exists in the users array.
+     * If it does, it returns the index of the user to which this email belongs.
+     * If not, it returns -1.
+     */
+    public static int getUserIndexByEmail(String email) {
+    	int userIndex = -1;
+    	for (int i = 0; i < userQuantity; i++) {
+			if (users[i][2].equals(email)) {
+				userIndex = i;
+			}
+		}
+    	return userIndex;
+    }
+    
+    /*
+     * This method checks whether the data received from the user is suitable for logging in, returning a boolean value.
+     * True if successful, false otherwise.
+     * It prints appropriate messages according to the scenarios.
+     */
+    public static boolean login(String email, String password) {
+    	int userIndex = getUserIndexByEmail(email);
+    	String response = null;
+    	boolean result = false;
+    	
+    	if (userIndex != -1) {
+			if (checkPassword(email, password)) {
+				response = "Successfully logged in.";
+				result = true;
+			}
+			else {
+				response = "Incorrect password. Please try again.";
+			}
+		}
+    	
+    	else {
+    		response = "Login failed. Such a user could not be found.";
+		}
+    	System.out.println(response + "\n");
+    	return result;
+    }
+    
+    /*
+     * This method first checks if a user with the given email already exists in the system.
+     * Then, if it does not exist, it registers the user into the system (adds to the users array).
+     * It prints appropriate messages according to the scenarios.
+     */
+    public static void signUp(String fullName, String ID, String email, String password) {
+    	String response = null;
+    	if (getUserIndexByEmail(email) != -1) {
+			response = "A user with this email is already registered in the system. Please log in.";
+		}
+    	else {
+			String[][] usersClone = new String[userQuantity + 1][4];
+			for (int i = 0; i < userQuantity; i++) {
+				usersClone[i][0] = users[i][0];
+				usersClone[i][1] = users[i][1];
+				usersClone[i][2] = users[i][2];
+				usersClone[i][3] = users[i][3];
+			}
+			usersClone[userQuantity][0] = fullName;
+			usersClone[userQuantity][1] = ID;
+			usersClone[userQuantity][2] = email;
+			usersClone[userQuantity][3] = password;
+			userQuantity++;
+			users = usersClone;
+			response = "Successfully registered.";
+		}
+    	System.out.println(response + "\n");
     }
     
     /*
@@ -33,9 +321,9 @@ public class LibraryManagementSystem {
      * This method allows the user to borrow a book and prints the appropriate message.
      * It also prints the appropriate message if the user or book does not exist or if the user is not eligible to borrow a book.
      */
-    public static void checkOutBook(String userID, String bookName, String authorName) {
+    public static void checkOutBook(String userID, String tittle, String author) {
     	int userIndex = getUserIndexByUserId(userID);
-    	String ISBN = getISBNByBookAndAuthorName(bookName, authorName);
+    	String ISBN = getISBNByBookAndAuthorName(tittle, author);
     	int bookIndex = getBookIndexByISBN(ISBN);
     	String response = null;
     	
@@ -60,24 +348,11 @@ public class LibraryManagementSystem {
     		transactionsClone[transactionQuantity][0] = userID;
     		transactionsClone[transactionQuantity][1] = ISBN;
     		transactionsClone[transactionQuantity][2] = LocalDate.now().toString();
-    		transactionsClone[transactionQuantity][3] = authorName;
+    		transactionsClone[transactionQuantity][3] = author;
     		transactions = transactionsClone;
 			transactionQuantity++;
 			
-			String[][] booksClone = new String[bookQuantity - 1][4];
-			for (int i = 0, j = 0; i < bookQuantity; i++, j++) {
-				if (books[i][2].equals(ISBN)) {
-					j--;
-					continue;
-				}
-				booksClone[j][0] = books[i][0];
-				booksClone[j][1] = books[i][1];
-				booksClone[j][2] = books[i][2];
-				booksClone[j][3] = books[i][3];
-			}
-			books = booksClone;
-			bookQuantity--;
-			
+			truncateBooksArrayDeletion(tittle, author);
 			response = "The book borrowing was successfully completed.";
 		}
     	System.out.println(response);
@@ -141,8 +416,6 @@ public class LibraryManagementSystem {
     }
 
     /*
-
-
      *This method returns the index of the book that matches the given book title and author.
      * If there is no such book, it returns -1.
      */
@@ -164,17 +437,18 @@ public class LibraryManagementSystem {
     public static void truncateBooksArrayDeletion(String tittle, String author) {
         int bookIndex = getBookIndexByTittleAndAuthor(tittle, author);
         String[][] booksClone = new String[bookQuantity - 1][4];
-        for (int i = 0; i < bookQuantity; i++) {
+        for (int i = 0, j = 0; i < bookQuantity; i++, j++) {
             if (bookIndex == i) {
+            	j--;
                 continue;
             }
-            booksClone[i][0] = books[i][0];
-            booksClone[i][1] = books[i][1];
-            booksClone[i][2] = books[i][2];
-            booksClone[i][3] = books[i][3];
+            booksClone[j][0] = books[i][0];
+            booksClone[j][1] = books[i][1];
+            booksClone[j][2] = books[i][2];
+            booksClone[j][3] = books[i][3];
         }
+        bookQuantity--;
         books = booksClone;
-
     }
 
     /*
@@ -188,20 +462,15 @@ public class LibraryManagementSystem {
             response = "There is not book in library.";
         } else {
             truncateBooksArrayDeletion(tittle, author);
-            response = "The book has been successfully deleted .";
+            response = "The book has been successfully deleted.";
         }
         System.out.println(response);
     }
 
-
-
-         * This method checks for the userId in the transaction array .
-         * Removes the userId from the transaction array, transferring it to a new transaction array.
-
+    /*
      * This method adds the given book to the library.
      * If the book exists, it prints a message indicating this.
      * Otherwise, it prints a message that the book was successfully added.
-
      */
     public static void addBook(String tittle, String author, String pageNumber) {
         String ISBN = generateISBN();
@@ -217,7 +486,7 @@ public class LibraryManagementSystem {
      * This method checks for the userId in the transaction array .
      * Removes the userId from the transaction array, transferring it to a new transaction array.
      */
-    public static void cleanTransactionsUserId(String userId) {
+    public static void cleanTransactionsByUserId(String userId) {
         int transactionCounter = 0;
         for (int i = 0; i < transactionQuantity; i++) {
             if (transactions[i][0].equals(userId)) {
@@ -235,7 +504,7 @@ public class LibraryManagementSystem {
             newTransactions[j][2] = transactions[i][2];
             newTransactions[j][3] = transactions[i][3];
         }
-        
+        transactionQuantity -= transactionCounter;
         transactions = newTransactions;
     }
 
@@ -256,15 +525,17 @@ public class LibraryManagementSystem {
             if (i == index) {
                 continue;
             }
-            newUsers[newIndex] = users[i];
+            newUsers[newIndex][0] = users[i][0];
+            newUsers[newIndex][1] = users[i][1];
+            newUsers[newIndex][2] = users[i][2];
+            newUsers[newIndex][3] = users[i][3];
             newIndex++;
         }
         users = newUsers;
         userQuantity--;
-        cleanTransactionsUserId(userId);
+        cleanTransactionsByUserId(userId);
         System.out.println("The user has been deleted successfully.");
     }
-
 
     /*
      *This method checks if the book with the given ISBN is available in the library.
@@ -347,12 +618,12 @@ public class LibraryManagementSystem {
     }
 
     // This method updates the book's name, author name and page number.
-    public static void updateBook(String ISBN, String newBookName, String newAuthorName, String newPageNumber) {
+    public static void updateBook(String ISBN, String newTittle, String newAuthor, String newPageNumber) {
         int bookIndex = getBookIndexByISBN(ISBN);
         String response = "There is no such book in the library.";
         if (bookIndex != -1) {
-            books[bookIndex][0] = newBookName;
-            books[bookIndex][1] = newAuthorName;
+            books[bookIndex][0] = newTittle;
+            books[bookIndex][1] = newAuthor;
             books[bookIndex][3] = newPageNumber;
             response = "The book information has been successfully updated.";
         }
@@ -363,14 +634,14 @@ public class LibraryManagementSystem {
      *This method takes a  value as a parameter (email, password or userIndex)
      *It checks whether there is any invalid entry.
      */
-    public static boolean checkPassword(String email, String password, String userId) {
-        int userIndex = getUserIndexByUserId(userId);
+    public static boolean checkPassword(String email, String password) {
+        int userIndex = getUserIndexByEmail(email);
         return users[userIndex][2].equals(email) && users[userIndex][3].equals(password);
     }
 
-    public static void printCheckPassword(String email, String password, String userId) {
+    public static void printCheckPassword(String email, String password) {
         String response = "Login Successful";
-        boolean result = checkPassword(email, password, userId);
+        boolean result = checkPassword(email, password);
         if (!result) {
             response = "Login Failed please check your password or email.";
         }
@@ -378,11 +649,11 @@ public class LibraryManagementSystem {
     }
 
     // This method allows users to make book reservations.
-    public static void reserveBook(String ISBN) {
-        int bookIndex = getBookIndexByISBN(ISBN);
-        String response = "Book reservation has been completed successfully." + "\nReserved book: " + books[bookIndex][0];
-        if (bookIndex == -1)
-            response = "This book is currently not available in the library.";
+    public static void reserveBook(String tittle, String author) {
+    	int bookIndex = getBookIndexByTittleAndAuthor(tittle, author);
+        String response = "This book is currently not available in the library.";
+        if (bookIndex != -1)
+        	response = "Book reservation has been completed successfully." + "\nReserved book: " + books[bookIndex][0];
         System.out.println(response);
     }
 
@@ -402,7 +673,7 @@ public class LibraryManagementSystem {
     }
 
     // This method updates the user's email and password.
-    public static void updatePatronInfo(String userId, String newEmail, String newPassword) {
+    public static void updateUserInfo(String userId, String newEmail, String newPassword) {
         int userIndex = getUserIndexByUserId(userId);
         String response = "There is no such user in the library system.";
         if (userIndex != -1) {
@@ -430,7 +701,6 @@ public class LibraryManagementSystem {
                 eligibility = false;
             }
         }
-
         return eligibility;
     }
 
@@ -569,10 +839,8 @@ public class LibraryManagementSystem {
         if (!isEmpty) {
             System.out.println("Not Available Books");
         } else {
-            System.out.println("Available books");
-            for (int i = 0; i < bookQuantity; i++) {
-                printBooks(books[i][0], books[i][1], books[i][2], books[i][3]);
-            }
+            System.out.println("Available books: ");
+            printAllBooks();
         }
     }
 
@@ -587,6 +855,10 @@ public class LibraryManagementSystem {
      */
     public static void returnBook(String userID, String tittle, String author, String ISBN, String pageNumber) {
         int transactionIndex = getTransactionIndexByUserId(userID);
+        if (transactionIndex == -1) {
+            System.out.println("This book has already been returned");
+            return;
+		}
         String returnDeadline = checkBookReturnDeadline(userID);
         String response = null;
 
@@ -594,9 +866,6 @@ public class LibraryManagementSystem {
             response = "The book was returned late.\nBook returned successfully.";
         } else if (transactionIndex != -1) {
             response = "Book returned successfully.";
-        } else {
-            System.out.println("This book has already been returned");
-            return;
         }
 
         String[][] transactionClone = new String[transactionQuantity - 1][4];
@@ -612,13 +881,9 @@ public class LibraryManagementSystem {
         }
 
         transactions = transactionClone;
-        books[bookQuantity][0] = tittle;
-        books[bookQuantity][1] = author;
-        books[bookQuantity][2] = ISBN;
-        books[bookQuantity][3] = pageNumber;
         transactionQuantity--;
-        bookQuantity++;
-
+        
+        extendBooksArrayOnAddition(tittle, author, pageNumber, ISBN);
         System.out.println(response);
     }
 
